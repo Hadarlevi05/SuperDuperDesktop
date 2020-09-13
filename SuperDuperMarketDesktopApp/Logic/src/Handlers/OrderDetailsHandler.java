@@ -60,4 +60,7 @@ public class OrderDetailsHandler {
         order.deliveryPrice = order.deliveryPriceByStore.values().stream().reduce(0.0, Double::sum);
         order.totalPrice = order.totalItemsPrice + order.deliveryPrice;
     }
+
+    public void updateOrderWithDiscount(Order order, List<Offer> selectedOffers) {
+    }
 }

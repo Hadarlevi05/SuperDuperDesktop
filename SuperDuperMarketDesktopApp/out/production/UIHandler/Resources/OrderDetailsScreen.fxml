@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="orderDetailsPane"  prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.OrderDetailsController">
+   <children>
+      <ScrollPane prefHeight="400.0" prefWidth="633.0">
+        <content>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="393.0" prefWidth="669.0">
+               <children>
+                  <Label layoutX="22.0" layoutY="54.0" prefHeight="66.0" prefWidth="511.0" text="Selected items:">
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="22.0" layoutY="7.0" prefHeight="66.0" prefWidth="511.0" text="Order Details">
+                     <font>
+                        <Font name="System Bold" size="23.0" />
+                     </font>
+                  </Label>
+                  <ListView fx:id="orderDetailItemList" layoutX="22.0" layoutY="111.0" prefHeight="211.0" prefWidth="494.0" />
+               </children>
+            </AnchorPane>
+        </content>
+      </ScrollPane>
+   </children>
+</AnchorPane>

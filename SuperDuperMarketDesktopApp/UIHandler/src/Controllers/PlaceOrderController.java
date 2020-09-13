@@ -6,23 +6,19 @@ import Handlers.OrderDetailsHandler;
 import Handlers.OrderManager;
 import Handlers.StoreHandler;
 import Models.*;
-import UIUtils.CommonUsed;
-import com.sun.xml.internal.txw2.DatatypeWriter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -30,20 +26,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 
-import javax.swing.*;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Paths;
-import java.time.LocalDate;
 import java.util.*;
-
-import static Enums.OrderType.*;
 
 public class PlaceOrderController {
     private Accordion accodionPane;
@@ -56,7 +44,6 @@ public class PlaceOrderController {
     private TableView<ItemTable> itemsTable = new TableView<ItemTable> ();
     private StoreHandler storeHandler = new StoreHandler();
     private Button continueButton = new Button("Continue");
-
     private OrderManager orderManager = new OrderManager();
     OrderDetailsHandler orderDetailsHandler = new OrderDetailsHandler();
 
@@ -181,7 +168,8 @@ public class PlaceOrderController {
                                                     else {
                                                         qo = new QuantityObject(0, Double.parseDouble(selected.quantity));
                                                     }
-                                                    orderDetailsHandler.updateOrderDetails(superDuperMarket, order, oi, store[0], selectedCustomer[0].location, orderDate[0], qo);                                                }
+                                                    orderDetailsHandler.updateOrderDetails(superDuperMarket, order, oi, store[0], selectedCustomer[0].location, orderDate[0], qo);
+                                                }
                                             }
                                         }
                                     });
@@ -206,26 +194,34 @@ public class PlaceOrderController {
                             try {
                                 List<Discount> sales = orderManager.checkForSales(superDuperMarket,order);
                                 if (sales.size() > 0){
-
-                                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Resources/SaleScreen.fxml"));
-                                    //fxmlLoader.setRoot(this);
-                                    //fxmlLoader.setController(this);
-
-
                                     try {
-
-                                        //Creating a scene object
+                                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Resources/SaleScreen.fxml"));
                                         Scene scene = new Scene(fxmlLoader.load());
                                         Stage stage = new Stage();
                                         stage.setTitle("Anchor Pane Example");
                                         stage.setScene(scene);
                                         stage.show();
+                                        SaleController saleController = fxmlLoader.getController();
+
+                                        saleController.setRefreshOrderCallback(selectedOffers -> {
+                                            stage.hide();
+                                            orderDetailsHandler.updateOrderWithDiscount(order, selectedOffers);
+                                            try {
+                                                displayOrderDetails(superDuperMarket ,order, textPane);
+                                            } catch (IOException e) {
+                                                e.printStackTrace();
+                                            }
+                                        });
+
+                                        SaleController sl = fxmlLoader.getController();
+                                        sl.showSales(superDuperMarket,sales);
                                     } catch (IOException exception) {
                                         throw new RuntimeException(exception);
                                     }
 
-                                    SaleController sl = fxmlLoader.getController();
-                                    sl.showSales(superDuperMarket,sales);
+                                }else{
+                                    textPane.getChildren().clear();
+                                    displayOrderDetails(superDuperMarket, order, textPane);
                                 }
                             }
                             catch (Exception e){
@@ -263,6 +259,30 @@ public class PlaceOrderController {
         } catch (IOException ioException) {
             ioException.printStackTrace();
         }
+    }
+
+    private void displayOrderDetails(SuperDuperMarket sdm,Order order, Pane textPane) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Resources/OrderDetailsScreen.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        Stage stage = new Stage();
+        stage.setTitle("Order Details");
+        stage.setScene(scene);
+        stage.show();
+
+        OrderDetailsController orderDetailsController = fxmlLoader.getController();
+        orderDetailsController.showorderDetails(sdm, order);
+
+       /* FXMLLoader fxmlLoader = new FXMLLoader();
+
+        URL url = getClass().getResource("/Resources/OrderDetailsScreen.fxml");
+        fxmlLoader.setLocation(url);
+        try {
+            textPane = fxmlLoader.load(url.openStream());
+        }
+        catch (Exception e){
+
+        }*/
+
     }
 
     private void BuildFxTableViewItems(List<ItemTable> itemTable) {

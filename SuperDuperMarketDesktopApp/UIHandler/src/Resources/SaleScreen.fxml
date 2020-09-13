@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="salePane" prefHeight="645.0" prefWidth="585.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.SaleController">
+<AnchorPane fx:id="salePane" prefHeight="645.0" prefWidth="585.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.SaleController">
     <children>
       <ScrollPane fx:id="scrolPaneSale" layoutY="7.0" prefHeight="639.0" prefWidth="583.0">
           <content>
@@ -35,6 +32,6 @@
             </AnchorPane>
         </content>
       </ScrollPane>
-      <Button layoutX="186.0" layoutY="594.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="159.0" text="Continue" />
+          <Button layoutX="186.0" layoutY="594.0" mnemonicParsing="false" onAction="#updateOrder" prefHeight="25.0" prefWidth="159.0" text="Continue" />
    </children>
 </AnchorPane>

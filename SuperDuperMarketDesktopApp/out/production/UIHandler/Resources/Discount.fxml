@@ -12,8 +12,8 @@
             <GridPane fx:id="lblQu">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="194.0" minWidth="5.0" prefWidth="100.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="300.0" minWidth="10.0" prefWidth="184.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="300.0" minWidth="10.0" prefWidth="184.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="300.0" minWidth="10.0" prefWidth="91.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="300.0" minWidth="10.0" prefWidth="176.0" />
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="266.0" minWidth="10.0" prefWidth="266.0" />
               </columnConstraints>
               <rowConstraints>
@@ -25,19 +25,19 @@
                         <Insets left="30.0" />
                      </GridPane.margin>
                   </CheckBox>
-                  <Label fx:id="lblSale" prefHeight="77.0" prefWidth="224.0" text="Label" textAlignment="CENTER" textFill="#4611fa" textOverrun="CENTER_ELLIPSIS" GridPane.columnIndex="3">
+                  <Label fx:id="lblSale" prefHeight="33.0" prefWidth="166.0" text="Label" textAlignment="CENTER" textFill="#4611fa" textOverrun="CENTER_ELLIPSIS" GridPane.columnIndex="2">
                      <font>
-                        <Font name="Franklin Gothic Heavy Italic" size="28.0" />
+                        <Font name="Franklin Gothic Heavy Italic" size="20.0" />
                      </font>
                   </Label>
-                  <Label fx:id="lblPrice" prefHeight="67.0" prefWidth="178.0" text="Label" textFill="#43db0b" GridPane.columnIndex="2">
+                  <Label fx:id="lblPrice" prefHeight="43.0" prefWidth="257.0" text="Label" textFill="#43db0b" GridPane.columnIndex="3">
                      <font>
-                        <Font size="29.0" />
+                        <Font size="20.0" />
                      </font>
                   </Label>
-                  <Label fx:id="lblQuantity" prefHeight="26.0" prefWidth="137.0" text="Quantity" textAlignment="CENTER" textOverrun="CENTER_ELLIPSIS" GridPane.columnIndex="1">
+                  <Label fx:id="lblQuantity" prefHeight="26.0" prefWidth="61.0" text="Quantity" textAlignment="CENTER" textFill="#4611fa" textOverrun="CENTER_ELLIPSIS" GridPane.columnIndex="1">
                      <font>
-                        <Font size="17.0" />
+                        <Font name="System Bold Italic" size="17.0" />
                      </font>
                   </Label>
                </children>
