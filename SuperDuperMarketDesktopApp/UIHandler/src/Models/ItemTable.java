@@ -25,11 +25,9 @@ public class ItemTable {
     public String getName() {
         return name;
     }
-
     public int getSerialNumber() {
         return serialNumber;
     }
-
     public Double getPrice() {
         return price;
     }

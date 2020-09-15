@@ -228,6 +228,47 @@ public class PlaceOrderController {
                                String msg = e.getMessage();
                             }
                         }
+                    });continueButton.setOnAction(new EventHandler() {
+
+                        @Override
+                        public void handle(Event event) {
+                            try {
+                                List<Discount> sales = orderManager.checkForSales(superDuperMarket,order);
+                                if (sales.size() > 0){
+                                    try {
+                                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Resources/SaleScreen.fxml"));
+                                        Scene scene = new Scene(fxmlLoader.load());
+                                        Stage stage = new Stage();
+                                        stage.setTitle("Anchor Pane Example");
+                                        stage.setScene(scene);
+                                        stage.show();
+                                        SaleController saleController = fxmlLoader.getController();
+
+                                        saleController.setRefreshOrderCallback(selectedOffers -> {
+                                            stage.hide();
+                                            orderDetailsHandler.updateOrderWithDiscount(order, selectedOffers);
+                                            try {
+                                                displayOrderDetails(superDuperMarket ,order, textPane);
+                                            } catch (IOException e) {
+                                                e.printStackTrace();
+                                            }
+                                        });
+
+                                        SaleController sl = fxmlLoader.getController();
+                                        sl.showSales(superDuperMarket,sales);
+                                    } catch (IOException exception) {
+                                        throw new RuntimeException(exception);
+                                    }
+
+                                }else{
+                                    textPane.getChildren().clear();
+                                    displayOrderDetails(superDuperMarket, order, textPane);
+                                }
+                            }
+                            catch (Exception e){
+                               String msg = e.getMessage();
+                            }
+                        }
                     });
                 }
             });
@@ -270,7 +311,7 @@ public class PlaceOrderController {
         stage.show();
 
         OrderDetailsController orderDetailsController = fxmlLoader.getController();
-        orderDetailsController.showorderDetails(sdm, order);
+        orderDetailsController.showorderDetails(sdm, order, textPane);
 
        /* FXMLLoader fxmlLoader = new FXMLLoader();
 
