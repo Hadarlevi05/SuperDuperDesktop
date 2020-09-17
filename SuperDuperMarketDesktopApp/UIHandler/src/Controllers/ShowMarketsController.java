@@ -4,7 +4,7 @@ import Handlers.StoreHandler;
 import Handlers.SuperDuperHandler;
 import Models.*;
 import UIUtils.CommonUsed;
-import UIUtils.StoreItemTable;
+import UIUtils.StoreItemTableOfStaticOrder;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -55,7 +55,7 @@ public class ShowMarketsController {
             for (int i = 0; i < superDuperMarket.Stores.toArray().length; i++) {
                 TitledPane titledPane = new TitledPane();
                 GridPane grid = new GridPane();
-                TableView<StoreItemTable> tableView = new TableView<StoreItemTable> ();
+                TableView<StoreItemTableOfStaticOrder> tableView = new TableView<StoreItemTableOfStaticOrder> ();
                 ListView<String> listView = new ListView<>();
 
                 ObservableList<String> storeDetails = FXCollections.observableArrayList();
@@ -68,13 +68,13 @@ public class ShowMarketsController {
 
                 List<OrderItem> orderItems = store.Inventory;
                 if (orderItems != null) {
-                    List<StoreItemTable> StoreItemTable = new ArrayList<>();
+                    List<StoreItemTableOfStaticOrder> StoreItemTable = new ArrayList<>();
 
                     for (int j = 0; j < orderItems.toArray().length; j++) {
                         OrderItem oi = orderItems.get(j);
                         Item item = superDuperHandler.getItemById(superDuperMarket, oi.itemId);
                         if (item!=null){
-                            StoreItemTable.add(new StoreItemTable(item.serialNumber,item.name,oi.price,item.purchaseType.toString()));
+                            StoreItemTable.add(new StoreItemTableOfStaticOrder(item.serialNumber,item.name,oi.price,item.purchaseType));
                         }
                     }
 
@@ -184,7 +184,7 @@ public class ShowMarketsController {
         storeDetails.add("Total cost of deliveries from store: " +String.format("%.2f", totalDeliveriesCost) + "\n");
     }
 
-    private void BuildFxTableViewItems(List<StoreItemTable> StoreItemTable, TableView<StoreItemTable> tableView) {
+    private void BuildFxTableViewItems(List<StoreItemTableOfStaticOrder> StoreItemTable, TableView<StoreItemTableOfStaticOrder> tableView) {
         ObservableList data = FXCollections.observableList(StoreItemTable);
         tableView.setItems(data);
 

@@ -6,6 +6,8 @@ import Handlers.OrderDetailsHandler;
 import Handlers.OrderManager;
 import Handlers.StoreHandler;
 import Models.*;
+import UIUtils.StoreItemTableOfDynamicOrder;
+import UIUtils.StoreItemTableOfStaticOrder;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
@@ -18,10 +20,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -37,17 +36,28 @@ public class PlaceOrderController {
     private Accordion accodionPane;
 
     @FXML
-    private ComboBox<Customer> CustomerComboBox = new ComboBox<Customer>();
+    private ComboBox<Customer> CustomerComboBox;
     private DatePicker purchaseDate = new DatePicker();
-    private ComboBox<OrderType> orderType = new ComboBox<OrderType>();
-    private ComboBox<Store> selectStore = new ComboBox<Store> ();
-    private TableView<ItemTable> itemsTable = new TableView<ItemTable> ();
+    private ComboBox<OrderType> orderType;
+    private ComboBox<Store> selectStore;
+    private TableView<StoreItemTableOfStaticOrder> itemsTableStaticOrder = new TableView<StoreItemTableOfStaticOrder>();
+    private TableView<StoreItemTableOfDynamicOrder> itemsTableDynamicOrder = new TableView<StoreItemTableOfDynamicOrder>();
+
     private StoreHandler storeHandler = new StoreHandler();
-    private Button continueButton = new Button("Continue");
+    private Button continueButton;
+    private Button cancelButton;
+
     private OrderManager orderManager = new OrderManager();
     OrderDetailsHandler orderDetailsHandler = new OrderDetailsHandler();
 
     void placeOrder(SuperDuperMarket superDuperMarket, Pane textPane) {
+        final int[] cumulativeHeight = {5};
+
+        selectStore = new ComboBox<Store>();
+        orderType = new ComboBox<OrderType>();
+        CustomerComboBox = new ComboBox<Customer>();
+        continueButton = new Button("Continue");
+        cancelButton = new Button("Cancel");
         selectStore.setPromptText("Select Store");
         CustomerComboBox.setPromptText("Select customer");
         selectStore.setPromptText("Select store");
@@ -64,245 +74,243 @@ public class PlaceOrderController {
         FXMLLoader fxmlLoader = new FXMLLoader();
         URL url = getClass().getResource("/Resources/PlaceOrderScreen2.fxml");
         fxmlLoader.setLocation(url);
-        try{
-            accodionPane =  fxmlLoader.load(url.openStream());
-            ObservableList<Customer> customerDetails = FXCollections.observableArrayList();
-            for (Customer customer:
-                 superDuperMarket.Customers) {
-                customerDetails.add(customer);
-            }
+        try {
+            accodionPane = fxmlLoader.load(url.openStream());
+            ObservableList<Customer> customerDetails = getCustomers(superDuperMarket);
             CustomerComboBox.setItems(customerDetails);
-
-
             textPane.getChildren().clear();
             textPane.getChildren().add(CustomerComboBox);
+            CustomerComboBox.setLayoutY(cumulativeHeight[0]);
+
             accodionPane.prefWidthProperty().bind(textPane.widthProperty());
-            CustomerComboBox.setOnAction (new EventHandler() {
+            CustomerComboBox.setOnAction(new EventHandler() {
                 @Override
                 public void handle(Event event) {
                     selectedCustomer[0] = CustomerComboBox.getValue();
                     purchaseDate.setDisable(false);
+                    cumulativeHeight[0] += CustomerComboBox.getBoundsInLocal().getHeight() + 5;
+                    purchaseDate.setLayoutY(cumulativeHeight[0]);
+                    textPane.getChildren().add(purchaseDate);
+
                 }
             });
-
-
             purchaseDate.setOnAction(event -> {
                 orderDate[0] = java.sql.Date.valueOf(purchaseDate.getValue());
                 orderType.setDisable(false);
-            });
+                cumulativeHeight[0] += purchaseDate.getBoundsInLocal().getHeight() + 5;
+                orderType.setLayoutY(cumulativeHeight[0]);
+                textPane.getChildren().add(orderType);
 
+            });
             orderType.setPromptText("Select order type");
             ObservableList<OrderType> orderTypes = FXCollections.observableArrayList();
             orderTypes.addAll(EnumSet.allOf(OrderType.class));
-
             orderType.setItems(orderTypes);
             orderType.setOnAction(new EventHandler() {
 
                 @Override
                 public void handle(Event event) {
-                    OrderType orderType = PlaceOrderController.this.orderType.getValue();
+                    OrderType orderTypeSelected = PlaceOrderController.this.orderType.getValue();
+                    cumulativeHeight[0] += orderType.getBoundsInLocal().getHeight() + 5;
                     continueButton.setDisable(false);
 
-                    switch (orderType){
+                    switch (orderTypeSelected) {
                         case STATIC:
+                            selectStore.setLayoutY(cumulativeHeight[0]);
+                            textPane.getChildren().add(selectStore);
                             selectStore.setDisable(false);
                             ObservableList<Store> storeDetailsForOrder = FXCollections.observableArrayList();
-                            for (Store store: superDuperMarket.Stores) {
+                            for (Store store : superDuperMarket.Stores) {
                                 storeDetailsForOrder.add(store);
                             }
 
                             selectStore.setItems(storeDetailsForOrder);
-                            selectStore.setOnAction(new EventHandler(){
+                            selectStore.setOnAction(new EventHandler() {
 
                                 @Override
                                 public void handle(Event event) {
-
-                                    List<ItemTable> itemTable = new ArrayList<>();
-
-                                    for (Item item:superDuperMarket.Items) {
-
-                                        OrderItem oi = storeHandler.GetOrderItemByItemId(selectStore.getValue(), item.serialNumber);
-                                        if (oi!=null){
-                                            itemTable.add(new ItemTable(item.serialNumber,item.name,oi.price,item.purchaseType));
-
-                                        }else{
-                                            itemTable.add(new ItemTable(item.serialNumber,item.name, null,item.purchaseType));
-
-                                        }
-                                    }
 
                                     store[0] = selectStore.getValue();
                                     Alert alert = new Alert(Alert.AlertType.INFORMATION, "Shipping cost from the store you selected:" + store[0].PPK, ButtonType.OK);
                                     alert.showAndWait();
 
-                                    BuildFxTableViewItems(itemTable);
+                                    List<StoreItemTableOfStaticOrder> itemTable = getItemsForStaticOrder(superDuperMarket, OrderType.STATIC);
+                                    BuilDItemsTableOfStaticOrder(itemTable, cumulativeHeight, textPane);
+                                    continueButton.setLayoutY(cumulativeHeight[0]);
+                                    cancelButton.setLayoutY(cumulativeHeight[0]);
+                                    cumulativeHeight[0] += continueButton.getBoundsInLocal().getHeight() + 5;
 
-                                    textPane.getChildren().add(itemsTable);
-                                    itemsTable.setOnMouseClicked(new EventHandler(){
+                                    textPane.getChildren().add(continueButton);
+                                    cancelButton.setLayoutX(100);
+                                    textPane.getChildren().add(cancelButton);
+
+                                    itemsTableStaticOrder.setOnMouseClicked(new EventHandler() {
                                         @Override
                                         public void handle(Event event) {
-                                            ItemTable selected = itemsTable.getSelectionModel().getSelectedItem();
-                                            if (selected.price == null){
+                                            StoreItemTableOfStaticOrder selected = itemsTableStaticOrder.getSelectionModel().getSelectedItem();
+                                            if (selected.price == null) {
                                                 Alert alert = new Alert(Alert.AlertType.INFORMATION, "The store you selected does not sell this item", ButtonType.OK);
                                                 alert.showAndWait();
-                                            }
-                                            else{
+                                            } else {
                                                 Dialog dialog = new TextInputDialog();
-                                                //dialog.setTitle(titleTxt);
                                                 dialog.setHeaderText("Please insert the required quantity");
-/*
-
-                                                ButtonType buttonTypeOk = new ButtonType("Okay", ButtonBar.ButtonData.OK_DONE);
-                                                dialog.getDialogPane().getButtonTypes().add(buttonTypeOk);
-*/
-
                                                 Optional<String> result = dialog.showAndWait();
                                                 if (result.isPresent()) {
                                                     selected.quantity = result.get();
-                                                    itemsTable.refresh();
-                                                    OrderItem oi = new OrderItem(selected.serialNumber, selected.price, store[0].serialNumber);
-                                                    QuantityObject qo = null;
-                                                    if (selected.purchaseType == PurchaseType.QUANTITY){
-                                                        qo = new QuantityObject(Integer.parseInt(selected.quantity),0);
+                                                    double parsedQuantity = Double.parseDouble(selected.quantity);
+                                                    if (parsedQuantity > 0) {
+                                                        itemsTableStaticOrder.refresh();
+                                                        OrderItem oi = new OrderItem(selected.serialNumber, selected.price, store[0].serialNumber);
+                                                        QuantityObject qo = null;
+                                                        if (selected.purchaseType == PurchaseType.QUANTITY) {
+                                                            qo = new QuantityObject(Integer.parseInt(selected.quantity), 0);
+                                                        } else {
+                                                            qo = new QuantityObject(0, parsedQuantity);
+                                                        }
+                                                        orderDetailsHandler.updateOrderDetails(superDuperMarket, order, oi, store[0], selectedCustomer[0].location, orderDate[0], qo);
                                                     }
-                                                    else {
-                                                        qo = new QuantityObject(0, Double.parseDouble(selected.quantity));
-                                                    }
-                                                    orderDetailsHandler.updateOrderDetails(superDuperMarket, order, oi, store[0], selectedCustomer[0].location, orderDate[0], qo);
                                                 }
                                             }
                                         }
                                     });
-
-                                    /*itemsTable.getColumns().add();
-                                    itemsTable.getColumns().add();
-
-                                    for (Item item:superDuperMarket.Items) {
-                                        OrderItem oi = storeHandler.GetOrderItemByItemId(store, item.serialNumber);
-                                        itemsTable.getItems().add();
-                                    }*/
-                            }});
+                                }
+                            });
 
                             break;
                         case DYNAMIC:
-                            break;
+                            List<StoreItemTableOfDynamicOrder> itemTable = getItemsForDynamicOrder(superDuperMarket, OrderType.DYNAMIC);
+                            BuilDItemsTableOfDynamicOrder(itemTable, cumulativeHeight, textPane);
+                            continueButton.setLayoutY(cumulativeHeight[0]);
+                            cancelButton.setLayoutY(cumulativeHeight[0]);
+                            cumulativeHeight[0] += continueButton.getBoundsInLocal().getHeight() + 5;
+
+                            textPane.getChildren().add(continueButton);
+                            cancelButton.setLayoutX(100);
+                            textPane.getChildren().add(cancelButton);
+
+
+                            itemsTableDynamicOrder.setOnMouseClicked(new EventHandler() {
+                                @Override
+                                public void handle(Event event) {
+                                    StoreItemTableOfDynamicOrder selected = itemsTableDynamicOrder.getSelectionModel().getSelectedItem();
+                                    Dialog dialog = new TextInputDialog();
+                                    dialog.setHeaderText("Please insert the required quantity");
+                                    Optional<String> result = dialog.showAndWait();
+                                    if (result.isPresent()) {
+                                        selected.quantity = result.get();
+                                        double parsedQuantity = Double.parseDouble(selected.quantity);
+                                        if (parsedQuantity > 0) {
+                                            itemsTableDynamicOrder.refresh();
+                                            OrderItem oi = superDuperMarket.Orders.FindCheapestStoreForItem(superDuperMarket, selected.serialNumber);
+                                            Store store = storeHandler.getStoreById(superDuperMarket, oi.storeId);
+                                            QuantityObject qo = null;
+                                            if (selected.purchaseType == PurchaseType.QUANTITY) {
+                                                qo = new QuantityObject(Integer.parseInt(selected.quantity), 0);
+                                            } else {
+                                                qo = new QuantityObject(0, parsedQuantity);
+                                            }
+                                            orderDetailsHandler.updateOrderDetails(superDuperMarket, order, oi, store, selectedCustomer[0].location, orderDate[0], qo);
+                                        }
+                                    }
+
+                                }
+                            });
+
                     }
                     continueButton.setOnAction(new EventHandler() {
 
                         @Override
                         public void handle(Event event) {
                             try {
-                                List<Discount> sales = orderManager.checkForSales(superDuperMarket,order);
-                                if (sales.size() > 0){
-                                    try {
-                                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Resources/SaleScreen.fxml"));
-                                        Scene scene = new Scene(fxmlLoader.load());
-                                        Stage stage = new Stage();
-                                        stage.setTitle("Anchor Pane Example");
-                                        stage.setScene(scene);
-                                        stage.show();
-                                        SaleController saleController = fxmlLoader.getController();
+                                if (order.orderItems.size() == 0) {
+                                    Alert alert = new Alert(Alert.AlertType.INFORMATION, "No items selected", ButtonType.OK);
+                                    alert.showAndWait();
+                                } else {
+                                    List<Discount> sales = orderManager.checkForSales(superDuperMarket, order);
+                                    if (sales.size() > 0) {
+                                        try {
+                                            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Resources/SaleScreen.fxml"));
+                                            Scene scene = new Scene(fxmlLoader.load());
+                                            Stage stage = new Stage();
+                                            stage.setTitle("Anchor Pane Example");
+                                            stage.setScene(scene);
+                                            stage.show();
+                                            SaleController saleController = fxmlLoader.getController();
 
-                                        saleController.setRefreshOrderCallback(selectedOffers -> {
-                                            stage.hide();
-                                            orderDetailsHandler.updateOrderWithDiscount(order, selectedOffers);
-                                            try {
-                                                displayOrderDetails(superDuperMarket ,order, textPane);
-                                            } catch (IOException e) {
-                                                e.printStackTrace();
-                                            }
-                                        });
+                                            saleController.setRefreshOrderCallback(selectedOffers -> {
+                                                stage.hide();
+                                                orderDetailsHandler.updateOrderWithDiscount(order, selectedOffers);
+                                                try {
+                                                    displayOrderDetails(superDuperMarket, order, textPane);
+                                                } catch (IOException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            });
 
-                                        SaleController sl = fxmlLoader.getController();
-                                        sl.showSales(superDuperMarket,sales);
-                                    } catch (IOException exception) {
-                                        throw new RuntimeException(exception);
+                                            SaleController sl = fxmlLoader.getController();
+                                            sl.showSales(superDuperMarket, sales);
+                                        } catch (IOException exception) {
+                                            throw new RuntimeException(exception);
+                                        }
+
+                                    } else {
+                                        textPane.getChildren().clear();
+                                        displayOrderDetails(superDuperMarket, order, textPane);
                                     }
-
-                                }else{
-                                    textPane.getChildren().clear();
-                                    displayOrderDetails(superDuperMarket, order, textPane);
                                 }
-                            }
-                            catch (Exception e){
-                               String msg = e.getMessage();
+                            } catch (Exception e) {
+                                String msg = e.getMessage();
                             }
                         }
-                    });continueButton.setOnAction(new EventHandler() {
+                    });
+                    cancelButton.setOnAction(new EventHandler() {
 
                         @Override
                         public void handle(Event event) {
-                            try {
-                                List<Discount> sales = orderManager.checkForSales(superDuperMarket,order);
-                                if (sales.size() > 0){
-                                    try {
-                                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Resources/SaleScreen.fxml"));
-                                        Scene scene = new Scene(fxmlLoader.load());
-                                        Stage stage = new Stage();
-                                        stage.setTitle("Anchor Pane Example");
-                                        stage.setScene(scene);
-                                        stage.show();
-                                        SaleController saleController = fxmlLoader.getController();
-
-                                        saleController.setRefreshOrderCallback(selectedOffers -> {
-                                            stage.hide();
-                                            orderDetailsHandler.updateOrderWithDiscount(order, selectedOffers);
-                                            try {
-                                                displayOrderDetails(superDuperMarket ,order, textPane);
-                                            } catch (IOException e) {
-                                                e.printStackTrace();
-                                            }
-                                        });
-
-                                        SaleController sl = fxmlLoader.getController();
-                                        sl.showSales(superDuperMarket,sales);
-                                    } catch (IOException exception) {
-                                        throw new RuntimeException(exception);
-                                    }
-
-                                }else{
-                                    textPane.getChildren().clear();
-                                    displayOrderDetails(superDuperMarket, order, textPane);
-                                }
-                            }
-                            catch (Exception e){
-                               String msg = e.getMessage();
-                            }
+                            textPane.getChildren().clear();
                         }
                     });
                 }
             });
-            textPane.getChildren().add(purchaseDate);
-            textPane.getChildren().add(orderType);
-            textPane.getChildren().add(selectStore);
-            textPane.getChildren().add(continueButton);
-
-            int cumulativeHeight = 0;
-
-            CustomerComboBox.setLayoutY(cumulativeHeight);
-            cumulativeHeight += CustomerComboBox.getBoundsInLocal().getHeight() + 35;
-
-            purchaseDate.setLayoutY(cumulativeHeight);
-            cumulativeHeight += purchaseDate.getBoundsInLocal().getHeight() + 35;
-
-            orderType.setLayoutY(cumulativeHeight);
-            cumulativeHeight += orderType.getBoundsInLocal().getHeight() + 35;
-
-            selectStore.setLayoutY(cumulativeHeight);
-            cumulativeHeight += selectStore.getBoundsInLocal().getHeight() + 35;
-
-            itemsTable.setLayoutY(cumulativeHeight);
-            cumulativeHeight += itemsTable.getBoundsInLocal().getHeight() + 400;
-
-            continueButton.setLayoutY(cumulativeHeight);
-            cumulativeHeight += continueButton.getBoundsInLocal().getHeight() + 200;
 
         } catch (IOException ioException) {
             ioException.printStackTrace();
         }
     }
 
-    private void displayOrderDetails(SuperDuperMarket sdm,Order order, Pane textPane) throws IOException {
+    private List<StoreItemTableOfStaticOrder> getItemsForStaticOrder(SuperDuperMarket superDuperMarket, OrderType orderType) {
+        List<StoreItemTableOfStaticOrder> itemTable = new ArrayList<>();
+        for (Item item : superDuperMarket.Items) {
+            OrderItem oi = storeHandler.GetOrderItemByItemId(selectStore.getValue(), item.serialNumber);
+            if (oi != null) {
+                itemTable.add(new StoreItemTableOfStaticOrder(item.serialNumber, item.name, oi.price, item.purchaseType));
+            } else {
+                itemTable.add(new StoreItemTableOfStaticOrder(item.serialNumber, item.name, null, item.purchaseType));
+            }
+        }
+        return itemTable;
+    }
+
+    private List<StoreItemTableOfDynamicOrder> getItemsForDynamicOrder(SuperDuperMarket superDuperMarket, OrderType orderType) {
+        List<StoreItemTableOfDynamicOrder> itemTable = new ArrayList<>();
+
+        for (Item item : superDuperMarket.Items) {
+            itemTable.add(new StoreItemTableOfDynamicOrder(item.serialNumber, item.name, item.purchaseType));
+        }
+
+        return itemTable;
+    }
+
+    private ObservableList<Customer> getCustomers(SuperDuperMarket superDuperMarket) {
+        ObservableList<Customer> customerDetails = FXCollections.observableArrayList();
+        for (Customer customer :
+                superDuperMarket.Customers) {
+            customerDetails.add(customer);
+        }
+        return customerDetails;
+    }
+
+    private void displayOrderDetails(SuperDuperMarket sdm, Order order, Pane textPane) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Resources/OrderDetailsScreen.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         Stage stage = new Stage();
@@ -326,11 +334,11 @@ public class PlaceOrderController {
 
     }
 
-    private void BuildFxTableViewItems(List<ItemTable> itemTable) {
+    private void BuilDItemsTableOfStaticOrder(List<StoreItemTableOfStaticOrder> itemTable, int[] cumulativeHeight, Pane textPane) {
 
 
         ObservableList data = FXCollections.observableList(itemTable);
-        itemsTable.setItems(data);
+        itemsTableStaticOrder.setItems(data);
 
         TableColumn nameCol = new TableColumn("Name");
         nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -338,20 +346,20 @@ public class PlaceOrderController {
         TableColumn serialCol = new TableColumn("serialNumber");
         serialCol.setCellValueFactory(new PropertyValueFactory<>("serialNumber"));
 
-        TableColumn priceCol = new TableColumn("price");
-        priceCol.setCellValueFactory(new PropertyValueFactory<>("price"));
-
         TableColumn quantityCol = new TableColumn("quantity");
         quantityCol.setCellValueFactory(new PropertyValueFactory<>("quantity"));
 
 
-        itemsTable.getColumns().setAll(nameCol, serialCol,priceCol,quantityCol);
+        TableColumn priceCol = new TableColumn("price");
+        priceCol.setCellValueFactory(new PropertyValueFactory<>("price"));
 
-        itemsTable.setPrefWidth(450);
-        itemsTable.setPrefHeight(300);
-        itemsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        itemsTableStaticOrder.getColumns().setAll(nameCol, serialCol, quantityCol);
 
 
+        itemsTableStaticOrder.setPrefWidth(450);
+        itemsTableStaticOrder.setPrefHeight(160);
+        itemsTableStaticOrder.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        //itemsTable.scrollTo(itemTable.size());
         Label label = new Label("Items");
         label.setTextFill(Color.DARKBLUE);
         label.setFont(Font.font("Calibri", FontWeight.BOLD, 36));
@@ -367,7 +375,60 @@ public class PlaceOrderController {
         // Vbox
         VBox vbox = new VBox(20);
         vbox.setPadding(new Insets(25, 25, 25, 25));
-        vbox.getChildren().addAll(hb, itemsTable, actionStatus);
+        vbox.getChildren().addAll(hb, itemsTableStaticOrder, actionStatus);
+
+        StackPane stack_pane = new StackPane(vbox);
+        stack_pane.setLayoutY(cumulativeHeight[0]);
+
+        cumulativeHeight[0] += 225;//stack_pane.getBoundsInLocal().getHeight() + 5;
+        textPane.getChildren().add(stack_pane);
+    }
+
+    private void BuilDItemsTableOfDynamicOrder(List<StoreItemTableOfDynamicOrder> itemTable, int[] cumulativeHeight, Pane textPane) {
+
+
+        ObservableList data = FXCollections.observableList(itemTable);
+        itemsTableDynamicOrder.setItems(data);
+
+        TableColumn nameCol = new TableColumn("Name");
+        nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+
+        TableColumn serialCol = new TableColumn("serialNumber");
+        serialCol.setCellValueFactory(new PropertyValueFactory<>("serialNumber"));
+
+        TableColumn quantityCol = new TableColumn("quantity");
+        quantityCol.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+
+
+        itemsTableDynamicOrder.getColumns().setAll(nameCol, serialCol, quantityCol);
+
+        itemsTableDynamicOrder.setPrefWidth(450);
+        itemsTableDynamicOrder.setPrefHeight(160);
+        itemsTableDynamicOrder.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        //itemsTable.scrollTo(itemTable.size());
+        Label label = new Label("Items");
+        label.setTextFill(Color.DARKBLUE);
+        label.setFont(Font.font("Calibri", FontWeight.BOLD, 36));
+
+        HBox hb = new HBox();
+        hb.setAlignment(Pos.CENTER);
+        hb.getChildren().add(label);
+
+        // Status message text
+        Text actionStatus = new Text();
+        actionStatus.setFill(Color.FIREBRICK);
+
+        // Vbox
+        VBox vbox = new VBox(20);
+        vbox.setPadding(new Insets(25, 25, 25, 25));
+        vbox.getChildren().addAll(hb, itemsTableDynamicOrder, actionStatus);
+
+        StackPane stack_pane = new StackPane(vbox);
+        stack_pane.setLayoutY(cumulativeHeight[0]);
+
+        cumulativeHeight[0] += 225;//stack_pane.getBoundsInLocal().getHeight() + 5;
+        textPane.getChildren().add(stack_pane);
+
 
     }
 }

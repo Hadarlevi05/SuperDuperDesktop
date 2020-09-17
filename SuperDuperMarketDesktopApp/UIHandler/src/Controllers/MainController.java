@@ -57,7 +57,7 @@ private Text userName;
     private ShowItemsController itemController = new ShowItemsController();
     private PlaceOrderController placeOrderController = new PlaceOrderController();
     private MapController mapController = new MapController();
-
+    private OrderHistoryController orderHistoryController = new OrderHistoryController();
 
     //  =========================== Scene Builder ================================
     private ScrollPane scrollPane = new ScrollPane();
@@ -484,6 +484,10 @@ private Text userName;
         //    } });
     }
 
+    public void showOrderHistory(ActionEvent actionEvent) {
+        orderHistoryController.showOrderHistory(superDuperMarket, textPane);
+
+    }
 
 
 //  ======================== Collaboration Functions ===========================

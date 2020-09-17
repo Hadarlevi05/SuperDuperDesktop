@@ -82,6 +82,7 @@ public class OrderDetailsController {
                     superDuperMarket.Orders.addOrder(superDuperMarket, order);
 
                     alert.showAndWait();
+
                     textPane.getChildren().clear();
                     Stage stage = (Stage) continueButton.getScene().getWindow();
                     stage.close();
@@ -91,9 +92,8 @@ public class OrderDetailsController {
 
                 @Override
                 public void handle(Event event) {
-                    Stage stage = (Stage) cancelButton.getScene().getWindow();
-                    stage.close();
-                    //textPane.getChildren().clear();
+
+                    textPane.getChildren().clear();
 
                 }
             });

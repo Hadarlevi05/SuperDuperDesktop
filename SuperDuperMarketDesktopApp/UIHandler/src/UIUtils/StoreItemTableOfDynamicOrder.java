@@ -2,26 +2,24 @@ package UIUtils;
 
 import Enums.PurchaseType;
 
-public class StoreItemTable {
+public class StoreItemTableOfDynamicOrder {
 
-    public StoreItemTable(int serialNumber, String name, Double price, String purchaseType){//,double price, int soldItemsNumber ){
+    public StoreItemTableOfDynamicOrder(int serialNumber, String name, PurchaseType purchaseType) {
         this.serialNumber = serialNumber;
         this.name = name;
-        this.price =price;
-        this.purchaseType = PurchaseType.valueOf(purchaseType.toUpperCase());
+        this.purchaseType = purchaseType;
 
     }
 
     public int serialNumber;
     public String name = null;
-    public Double price;
     public PurchaseType purchaseType;
-
-
+    public String quantity;
 
     public String getName() {
         return name;
     }
+
     public String getPurchaseType() {
         return purchaseType.toString();
     }
@@ -29,7 +27,10 @@ public class StoreItemTable {
     public int getSerialNumber() {
         return serialNumber;
     }
-    public Double getPrice() {
-        return price;
+
+    public String getQuantity() {
+        return quantity;
     }
+
 }
+
