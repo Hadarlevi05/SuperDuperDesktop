@@ -55,10 +55,11 @@ private Text userName;
     //  =========================== Controllers ==================================
     private ShowMarketsController marketController = new ShowMarketsController();
     private ShowItemsController itemController = new ShowItemsController();
+    private ShowCustomersController customersController = new ShowCustomersController();
+
     private PlaceOrderController placeOrderController = new PlaceOrderController();
     private MapController mapController = new MapController();
     private OrderHistoryController orderHistoryController = new OrderHistoryController();
-
     //  =========================== Scene Builder ================================
     private ScrollPane scrollPane = new ScrollPane();
     //private PannableCanvas canvas;
@@ -486,6 +487,11 @@ private Text userName;
 
     public void showOrderHistory(ActionEvent actionEvent) {
         orderHistoryController.showOrderHistory(superDuperMarket, textPane);
+
+    }
+
+    public void showCustomers(ActionEvent actionEvent) {
+        customersController.showCustomers(superDuperMarket, textPane);
 
     }
 

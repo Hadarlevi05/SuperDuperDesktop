@@ -1,5 +1,6 @@
 package Controllers;
 
+import Enums.OperatorTypeOfSale;
 import Enums.PurchaseType;
 import Handlers.LocationHandler;
 import Handlers.StoreHandler;
@@ -32,39 +33,102 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OrderDetailsController {
-    @FXML private AnchorPane orderDetailsPane;
-    @FXML private ListView orderDetailItemList;
-    @FXML private ScrollPane orderDetailsScroll;
-    @FXML private Label  orderDetailsLabel;
+    @FXML
+    private AnchorPane orderDetailsPane;
+    @FXML
+    private ListView orderDetailItemList;
+    @FXML
+    private ScrollPane orderDetailsScroll;
+    @FXML
+    private Label orderDetailsLabel;
     private SuperDuperHandler superDuperHandler = new SuperDuperHandler();
     private StoreHandler storeHandler = new StoreHandler();
     private LocationHandler locationHandler = new LocationHandler();
-    private TableView<OrderDetailsItem> orderitemsTable = new TableView<OrderDetailsItem> ();
-    @FXML private Button continueButton;
-    @FXML  Button cancelButton;
+    private TableView<OrderDetailsItem> orderitemsTable = new TableView<OrderDetailsItem>();
+    @FXML
+    private VBox orderDetailsVbox = new VBox();
+    private List<OrderDetailsComponent> childs = new ArrayList<>();
+    @FXML
+    private Button continueButton;
+    @FXML
+    Button cancelButton;
 
     public void showorderDetails(SuperDuperMarket superDuperMarket, Order order, Pane textPane) {
+        orderDetailsScroll.setVvalue(1.0);
 
+        for (int storeID : order.storesID) {
+
+            try {
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Resources/OrderDetailsPerStore.fxml"));
+                orderDetailsVbox.getChildren().add(fxmlLoader.load());
+                OrderDetailsComponent orderDetailsComponent = fxmlLoader.getController();
+                orderDetailsComponent.SetOrderDetails(superDuperMarket, order, storeID);
+                childs.add(orderDetailsComponent);
+
+                continueButton.setOnAction(new EventHandler() {
+
+                    @Override
+                    public void handle(Event event) {
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION, "Thank you for purchasing at super duper market");
+                        superDuperMarket.Orders.addOrder(superDuperMarket, order);
+
+                        alert.showAndWait();
+
+                        textPane.getChildren().clear();
+                        Stage stage = (Stage) continueButton.getScene().getWindow();
+                        stage.close();
+                    }
+                });
+                cancelButton.setOnAction(new EventHandler() {
+
+                    @Override
+                    public void handle(Event event) {
+
+                        textPane.getChildren().clear();
+
+                    }
+                });
+/*                saleComponent.setLayoutY(height * 200);
+                saleComponent.setCheckboxSelectCallback(selectedItemInDiscount -> {
+                    updateselectedItemInDiscount(selectedItemInDiscount);
+
+                    if (selectedItemInDiscount.operatorTypeOfSale == OperatorTypeOfSale.ONE_OF) {
+                        SetOneOf(selectedItemInDiscount.itemID, selectedItemInDiscount.selected);
+                    } else if (selectedItemInDiscount.operatorTypeOfSale == OperatorTypeOfSale.ALL_OR_NOTHING) {
+                        SetAllOrNothing(selectedItemInDiscount.selected);
+                    }
+                });*/
+                //height++;
+                //Checkbox tb = (Checkbox)saleComponent.lookup("#cbxSelectDiscount");
+
+            } catch (IOException exception) {
+                throw new RuntimeException(exception);
+            }
+            orderDetailsScroll.setContent(orderDetailsVbox);
+        }
+
+
+/*
         List<OrderDetailsItem> orderItemTable = new ArrayList<>();
+*/
         // add column if the item added on sale
-        for (OrderItem oi : order.orderItems) {
+/*        for (OrderItem oi : order.orderItems) {
             Item item = superDuperHandler.getItemById(superDuperMarket, oi.itemId);
             OrderDetailsItem orderDetailsItem = new OrderDetailsItem();
             orderDetailsItem.itemID = item.serialNumber;
             orderDetailsItem.name = item.name;
             orderDetailsItem.purchaseType = item.purchaseType;
-            orderDetailsItem.price = oi.price;
+            orderDetailsItem.totalPrice = oi.price;
 
-            if (oi.quantityObject.KGQuantity > 0){
+            if (oi.quantityObject.KGQuantity > 0) {
                 double quantiy = oi.quantityObject.KGQuantity;
 
                 orderDetailsItem.quantity = quantiy;
-                orderDetailsItem.price = quantiy * oi.price;
-            }
-            else{
+                orderDetailsItem.totalPrice = quantiy * oi.price;
+            } else {
                 int quantiy = oi.quantityObject.integerQuantity;
                 orderDetailsItem.quantity = quantiy;
-                orderDetailsItem.price = quantiy * oi.price;
+                orderDetailsItem.totalPrice = quantiy * oi.price;
             }
             Store store = storeHandler.getStoreById(superDuperMarket, oi.storeId);
             double distance = locationHandler.calculateDistanceOfTwoLocations(store.Location, order.CustomerLocation);
@@ -74,36 +138,12 @@ public class OrderDetailsController {
             orderItemTable.add(orderDetailsItem);
 
 
-            continueButton.setOnAction(new EventHandler() {
-
-                @Override
-                public void handle(Event event) {
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION, "Thank you for purchasing at super duper market");
-                    superDuperMarket.Orders.addOrder(superDuperMarket, order);
-
-                    alert.showAndWait();
-
-                    textPane.getChildren().clear();
-                    Stage stage = (Stage) continueButton.getScene().getWindow();
-                    stage.close();
-                }
-            });
-            cancelButton.setOnAction(new EventHandler() {
-
-                @Override
-                public void handle(Event event) {
-
-                    textPane.getChildren().clear();
-
-                }
-            });
-
         }
 
         //orderDetailsPane.getChildren().add(orderItemTable);
-        BuildFxTableViewOrderItems(orderItemTable);
-        orderitemsTable.setLayoutY(100);
-        orderDetailsScroll.setContent(orderDetailsPane);
+        BuildFxTableViewOrderItems(orderItemTable);*/
+        //orderitemsTable.setLayoutY(100);
+        //orderDetailsScroll.setContent(orderDetailsPane);
 
     }
 
@@ -111,6 +151,7 @@ public class OrderDetailsController {
 
 
     }
+
     private void BuildFxTableViewOrderItems(List<OrderDetailsItem> itemTable) {
 
         ObservableList data = FXCollections.observableList(itemTable);
@@ -143,7 +184,7 @@ public class OrderDetailsController {
         TableColumn shippingCostCol = new TableColumn("ShippingCost");
         shippingCostCol.setCellValueFactory(new PropertyValueFactory<>("shippingCost"));
 
-        orderitemsTable.getColumns().setAll(serialCol, nameCol, purchaseTypeCol,PriceCol,quantityCol,shippingCostCol,pricePerKilometerCol,distanceFromTheStoreCol,totalPricePerItemCol);
+        orderitemsTable.getColumns().setAll(serialCol, nameCol, purchaseTypeCol, PriceCol, quantityCol, shippingCostCol, pricePerKilometerCol, distanceFromTheStoreCol, totalPricePerItemCol);
 
         orderitemsTable.setPrefWidth(700);
         orderitemsTable.setPrefHeight(400);

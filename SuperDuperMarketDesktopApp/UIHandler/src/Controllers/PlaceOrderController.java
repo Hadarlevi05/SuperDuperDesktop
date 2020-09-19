@@ -353,13 +353,13 @@ public class PlaceOrderController {
         TableColumn priceCol = new TableColumn("price");
         priceCol.setCellValueFactory(new PropertyValueFactory<>("price"));
 
-        itemsTableStaticOrder.getColumns().setAll(nameCol, serialCol, quantityCol);
+        itemsTableStaticOrder.getColumns().setAll(nameCol, serialCol, priceCol, quantityCol);
 
 
         itemsTableStaticOrder.setPrefWidth(450);
         itemsTableStaticOrder.setPrefHeight(160);
         itemsTableStaticOrder.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        //itemsTable.scrollTo(itemTable.size());
+        itemsTableStaticOrder.scrollTo(0);
         Label label = new Label("Items");
         label.setTextFill(Color.DARKBLUE);
         label.setFont(Font.font("Calibri", FontWeight.BOLD, 36));

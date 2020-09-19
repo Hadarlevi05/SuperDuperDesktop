@@ -85,17 +85,19 @@ public class OrderManager {
         List<Discount> sales = new ArrayList<>();
         for (int storeID:order.storesID) {
             Store store = storeHandler.getStoreById(superDuperMarket, storeID);
-            for (Discount discount:store.Sales) {
-                List<OrderItem> itemsInSale = order.orderItems.stream().filter(item->item.itemId == discount.ItemID).collect(Collectors.toList());
-                if (itemsInSale != null && itemsInSale.size()>0){
-                    OrderItem itemOnSale = itemsInSale.get(0);
-                    double quantity = itemOnSale.quantityObject.integerQuantity > 0 ? itemOnSale.quantityObject.integerQuantity: itemOnSale.quantityObject.KGQuantity;
-                    if (quantity >= discount.Quantity){
-                        Discount disc = CloneDiscount(discount);
-                        disc.numOfOffers = (int)(quantity/discount.Quantity);
-                        sales.add(disc);
-                    }
+            if (store.Sales !=null && store.Sales.size() >0){
+                for (Discount discount:store.Sales) {
+                    List<OrderItem> itemsInSale = order.orderItems.stream().filter(item->item.itemId == discount.ItemID).collect(Collectors.toList());
+                    if (itemsInSale != null && itemsInSale.size()>0){
+                        OrderItem itemOnSale = itemsInSale.get(0);
+                        double quantity = itemOnSale.quantityObject.integerQuantity > 0 ? itemOnSale.quantityObject.integerQuantity: itemOnSale.quantityObject.KGQuantity;
+                        if (quantity >= discount.Quantity){
+                            Discount disc = CloneDiscount(discount);
+                            disc.numOfOffers = (int)(quantity/discount.Quantity);
+                            sales.add(disc);
+                        }
 
+                    }
                 }
             }
         }

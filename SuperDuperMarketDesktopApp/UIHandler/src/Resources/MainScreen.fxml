@@ -11,9 +11,9 @@
     <top>
         <GridPane prefHeight="60.0" prefWidth="596.0" BorderPane.alignment="CENTER">
             <columnConstraints>
-                <ColumnConstraints halignment="LEFT" hgrow="ALWAYS" maxWidth="128.0" minWidth="64.0" prefWidth="64.0" />
-                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="662.0" minWidth="400.0" prefWidth="658.0" />
-                <ColumnConstraints fillWidth="false" halignment="RIGHT" hgrow="ALWAYS" maxWidth="132.0" minWidth="15.0" prefWidth="19.0" />
+                <ColumnConstraints halignment="LEFT" hgrow="ALWAYS" maxWidth="169.0" minWidth="64.0" prefWidth="169.0" />
+                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="662.0" minWidth="400.0" prefWidth="560.0" />
+            <ColumnConstraints fillWidth="false" halignment="RIGHT" hgrow="ALWAYS" maxWidth="132.0" minWidth="15.0" prefWidth="19.0" />
             </columnConstraints>
             <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="ALWAYS" />
@@ -36,6 +36,21 @@
                         <Insets bottom="15.0" left="50.0" right="50.0" />
                     </padding>
                 </Label>
+            <Button fx:id="showStatusButton11" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#placeOrder" prefHeight="47.0" prefWidth="143.0" text="Place order" textFill="#1b476d">
+               <font>
+                  <Font size="14.0" />
+               </font>
+               <graphic>
+                  <ImageView fitHeight="18.0" fitWidth="18.0" x="10.0">
+                     <image>
+                        <Image url="@Images/shopping-cart.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <GridPane.margin>
+                  <Insets left="10.0" />
+               </GridPane.margin>
+            </Button>
             </children>
         </GridPane>
     </top>
@@ -62,7 +77,7 @@
                             <graphic>
                                 <ImageView fitHeight="15.0" fitWidth="15.0">
                                     <image>
-                                        <Image url="@Images/LoadRepo.png" />
+                                        <Image url="@Images/loading.png" />
                                     </image>
                                 </ImageView>
                             </graphic>
@@ -99,7 +114,7 @@
                     <content>
                         <AnchorPane fx:id="treeAnchorPane" focusTraversable="true" prefHeight="326.0" prefWidth="168.0" style="-fx-background-color: #DFE3EE;">
                      <children>
-                            <Button fx:id="showStatusButton" contentDisplay="RIGHT" layoutX="12.0" layoutY="14.0" mnemonicParsing="false" onAction="#showMarkets" prefHeight="41.0" prefWidth="130.0" text="Show stores" textFill="#1b476d">
+                            <Button fx:id="showStatusButton" contentDisplay="RIGHT" layoutX="13.0" layoutY="71.0" mnemonicParsing="false" onAction="#showMarkets" prefHeight="41.0" prefWidth="130.0" text="Show Stores" textFill="#1b476d">
                                 <font>
                                     <Font size="14.0" />
                                 </font>
@@ -111,7 +126,7 @@
                                     </ImageView>
                                 </graphic>
                             </Button>
-                        <Button fx:id="showStatusButton1" contentDisplay="RIGHT" layoutX="13.0" layoutY="71.0" mnemonicParsing="false" onAction="#showItems" prefHeight="41.0" prefWidth="130.0" text="Show items" textFill="#1b476d">
+                        <Button fx:id="showStatusButton1" contentDisplay="RIGHT" layoutX="13.0" layoutY="122.0" mnemonicParsing="false" onAction="#showItems" prefHeight="41.0" prefWidth="130.0" text="Show Items" textFill="#1b476d">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -119,18 +134,6 @@
                               <ImageView fitHeight="18.0" fitWidth="18.0">
                                  <image>
                                     <Image url="@Images/bread.png" />
-                                 </image>
-                              </ImageView>
-                           </graphic>
-                        </Button>
-                        <Button fx:id="showStatusButton11" contentDisplay="RIGHT" layoutX="12.0" layoutY="128.0" mnemonicParsing="false" onAction="#placeOrder" prefHeight="41.0" prefWidth="130.0" text="Place order" textFill="#1b476d">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                           <graphic>
-                              <ImageView fitHeight="18.0" fitWidth="18.0">
-                                 <image>
-                                    <Image url="@Images/shopping-cart.png" />
                                  </image>
                               </ImageView>
                            </graphic>
@@ -144,7 +147,7 @@
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Button fx:id="showStatusButton21" contentDisplay="RIGHT" layoutX="14.0" layoutY="229.0" mnemonicParsing="false" onAction="#showMaps" prefHeight="41.0" prefWidth="130.0" text="Show maps" textFill="#1b476d">
+                        <Button fx:id="showStatusButton21" contentDisplay="RIGHT" layoutX="14.0" layoutY="229.0" mnemonicParsing="false" onAction="#showMaps" prefHeight="41.0" prefWidth="130.0" text="Show Maps" textFill="#1b476d">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -152,6 +155,15 @@
                               <ImageView fitHeight="18.0" fitWidth="18.0">
                                  <image>
                                     <Image url="@Images/placeholder.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <Button fx:id="showStatusButton3" contentDisplay="RIGHT" layoutX="13.0" layoutY="14.0" mnemonicParsing="false" onAction="#showCustomers" prefHeight="41.0" prefWidth="130.0" text="Show Customers" textFill="#1b476d">
+                           <graphic>
+                              <ImageView fitHeight="18.0" fitWidth="18.0">
+                                 <image>
+                                    <Image url="@Images/customer.png" />
                                  </image>
                               </ImageView>
                            </graphic>

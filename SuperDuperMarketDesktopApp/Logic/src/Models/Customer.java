@@ -21,6 +21,6 @@ public class Customer {
 
     @Override
     public String toString() {
-        return "Serial number:" + serialNumber + " name:" + name ;
+        return "Serial Number: " + serialNumber + ", Name: " + name ;
     }
 }
