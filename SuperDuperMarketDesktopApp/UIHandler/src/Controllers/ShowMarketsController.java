@@ -1,4 +1,5 @@
 package Controllers;
+
 import Handlers.ItemHandler;
 import Handlers.StoreHandler;
 import Handlers.SuperDuperHandler;
@@ -45,6 +46,7 @@ public class ShowMarketsController {
     private SuperDuperHandler superDuperHandler = new SuperDuperHandler();
     private ItemHandler itemHandler = new ItemHandler();
     private StoreHandler storeHandler = new StoreHandler();
+
     void showMarkets(SuperDuperMarket superDuperMarket, Pane textPane) {
 
 
@@ -60,19 +62,19 @@ public class ShowMarketsController {
 
         List<Store> stores = superDuperMarket.Stores;
         try {
-            accodionPane =  fxmlLoader.load(url.openStream());
+            accodionPane = fxmlLoader.load(url.openStream());
 
             for (int i = 0; i < superDuperMarket.Stores.toArray().length; i++) {
                 TitledPane titledPane = new TitledPane();
                 GridPane grid = new GridPane();
-                TableView<StoreItemTable> tableView = new TableView<StoreItemTable> ();
+                TableView<StoreItemTable> tableView = new TableView<StoreItemTable>();
                 ListView<String> listView = new ListView<>();
 
                 ObservableList<String> storeDetails = FXCollections.observableArrayList();
 
                 Store store = stores.get(i);
 
-                storeDetails.add( String.format("Store number %d", i + 1) + ": ");
+                storeDetails.add(String.format("Store number %d", i + 1) + ": ");
                 storeDetails.add(String.format("Serial number: %d", store.serialNumber));
                 storeDetails.add(String.format("Store name: %s", store.name));
 
@@ -83,7 +85,7 @@ public class ShowMarketsController {
                     for (int j = 0; j < orderItems.toArray().length; j++) {
                         OrderItem oi = orderItems.get(j);
                         Item item = superDuperHandler.getItemById(superDuperMarket, oi.itemId);
-                        if (item!=null){
+                        if (item != null) {
                             StoreItemTable.add(new StoreItemTable(oi.price, item));
                         }
                     }
@@ -95,8 +97,8 @@ public class ShowMarketsController {
 
                 listView.setItems(storeDetails);
 
-                grid.add(listView,0,0);
-                grid.add(tableView,0,1);
+                grid.add(listView, 0, 0);
+                grid.add(tableView, 0, 1);
 
                 tableView.setFixedCellSize(25);
                 tableView.prefHeightProperty().bind(tableView.fixedCellSizeProperty().multiply(Bindings.size(tableView.getItems()).add(1.01)));
@@ -112,25 +114,24 @@ public class ShowMarketsController {
                 newButton.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
-                        ChoiceDialog<Item> dialog = new ChoiceDialog(null,listOfChoicesForDialog(superDuperMarket, store));
+                        ChoiceDialog<Item> dialog = new ChoiceDialog(null, listOfChoicesForDialog(superDuperMarket, store));
                         dialog.setTitle("Add New Item To Store");
                         dialog.setHeaderText("Add New Item To Store");
                         dialog.setContentText("Select item ID:");
                         Optional<Item> result = dialog.showAndWait();
 
-                        if (result.isPresent()){
+                        if (result.isPresent()) {
                             tableView.setEditable(true);
-                            handleAddNewRow(result.get(),store,superDuperMarket,tableView);
-                        }
-                        else {
+                            handleAddNewRow(result.get(), store, superDuperMarket, tableView);
+                        } else {
                             CommonUsed.showSuccess("There are no new items to add");
                         }
                     }
                 });
                 grid.setHgap(20); //horizontal gap in pixels
                 grid.setVgap(20);
-                newButton.setPadding(new Insets(3,3,0,3));
-                grid.add(newButton, 0,2);
+                newButton.setPadding(new Insets(3, 3, 0, 3));
+                grid.add(newButton, 0, 2);
 
                 Button deleteButton = new Button();
                 deleteButton.setText("Delete Item");
@@ -138,45 +139,38 @@ public class ShowMarketsController {
                     @Override
                     public void handle(ActionEvent event) {
                         tableView.setEditable(true);
-                        handleDeleteRow(store,superDuperMarket,tableView);
+                        handleDeleteRow(store, superDuperMarket, tableView);
 
                     }
                 });
 
 
-
-                deleteButton.setPadding(new Insets(3,3,3,3));
-                grid.add(deleteButton, 0,3);
-
-
+                deleteButton.setPadding(new Insets(3, 3, 3, 3));
+                grid.add(deleteButton, 0, 3);
 
 
                 tableView.setOnMouseClicked(new EventHandler() {
-                                                @Override
-                                                public void handle(Event event) {
-                                                    TextInputDialog dialog = new TextInputDialog("0");
-                                                    dialog.setTitle("Edit Price");
-                                                    dialog.setHeaderText("Edit Price of an Item");
-                                                    dialog.setContentText("Please enter new price:");
+                    @Override
+                    public void handle(Event event) {
+                        TextInputDialog dialog = new TextInputDialog("0");
+                        dialog.setTitle("Edit Price");
+                        dialog.setHeaderText("Edit Price of an Item");
+                        dialog.setContentText("Please enter new price:");
 
-                                                    tableView.setEditable(true);
-                                                    StoreItemTable currentItem = tableView.getSelectionModel().getSelectedItem();
-                                                    StoreItemTable storeItemTable = (StoreItemTable) currentItem;
-                                                    OrderItem selected = storeHandler.GetOrderItemByItemId(store,storeItemTable.serialNumber,false) ;
-                                                    Optional<String> result = dialog.showAndWait();
-                                                    if (result.isPresent()) {
-                                                        storeHandler.updateItemPrice(selected,store, superDuperMarket, Double.parseDouble(result.get()));
-                                                        storeItemTable.price = Double.parseDouble(result.get());
-                                                        tableView.refresh();
-                                                        CommonUsed.showSuccess("Price updated successfully");
-                                                    }
-                                                    else
-                                                    CommonUsed.showSuccess("Price wasn't updated successfully");
-                                                }
-                                            });
-
-
-
+                        tableView.setEditable(true);
+                        StoreItemTable currentItem = tableView.getSelectionModel().getSelectedItem();
+                        StoreItemTable storeItemTable = (StoreItemTable) currentItem;
+                        OrderItem selected = storeHandler.GetOrderItemByItemId(store, storeItemTable.serialNumber, false);
+                        Optional<String> result = dialog.showAndWait();
+                        if (result.isPresent()) {
+                            storeHandler.updateItemPrice(selected, store, superDuperMarket, Double.parseDouble(result.get()));
+                            storeItemTable.price = Double.parseDouble(result.get());
+                            tableView.refresh();
+                            CommonUsed.showSuccess("Price updated successfully");
+                        } else
+                            CommonUsed.showSuccess("Price wasn't updated successfully");
+                    }
+                });
 
 
                 titledPane.setContent(grid);
@@ -190,32 +184,31 @@ public class ShowMarketsController {
             textPane.getChildren().add(accodionPane);
             accodionPane.prefWidthProperty().bind(textPane.widthProperty());
 
-        } catch(IOException e) {
+        } catch (IOException e) {
             CommonUsed.showError(e.getMessage());
         }
     }
 
-    private void handleDeleteRow(Store store, SuperDuperMarket superDuperMarket,TableView tableView) {
+    private void handleDeleteRow(Store store, SuperDuperMarket superDuperMarket, TableView tableView) {
         Object currentItem = tableView.getSelectionModel().getSelectedItem();
-        if(currentItem == null){
+        if (currentItem == null) {
             CommonUsed.showSuccess("Item cannot be deleted because no item is selected");
             return;
         }
 
-        StoreItemTable storeItemTable = (StoreItemTable)currentItem;
+        StoreItemTable storeItemTable = (StoreItemTable) currentItem;
 
-        boolean success = storeHandler.deleteItemFromStore(storeItemTable.Item ,store,superDuperMarket);
+        boolean success = storeHandler.deleteItemFromStore(storeItemTable.Item, store, superDuperMarket);
 
-        if (success){
+        if (success) {
             tableView.getItems().remove(storeItemTable);
             CommonUsed.showSuccess("Item deleted");
-        }
-        else{
+        } else {
             CommonUsed.showSuccess("Item cannot be deleted because its sold in 1 store only.");
         }
     }
 
-    private void handleAddNewRow(Item item, Store store, SuperDuperMarket superDuperMarket,TableView tableView) {
+    private void handleAddNewRow(Item item, Store store, SuperDuperMarket superDuperMarket, TableView tableView) {
         // StoreItemTable storeItemTable = (StoreItemTable)currentItem;
         OrderItem oi = superDuperHandler.getOrderItemById(superDuperMarket, item.serialNumber);
         boolean success = storeHandler.addItemToStore(oi, store, superDuperMarket);
@@ -257,7 +250,7 @@ public class ShowMarketsController {
         }
         storeDetails.add(String.format("PPK: %d", store.PPK));
         double totalDeliveriesCost = storeHandler.getStoreById(superDuperMarket, store.serialNumber).CalculateTotalDeliveriesCost(superDuperMarket);
-        storeDetails.add("Total cost of deliveries from store: " +String.format("%.2f", totalDeliveriesCost) + "\n");
+        storeDetails.add("Total cost of deliveries from store: " + String.format("%.2f", totalDeliveriesCost) + "\n");
     }
 
     private void BuildFxTableViewItems(List<StoreItemTable> StoreItemTable, TableView<StoreItemTable> tableView) {
@@ -277,7 +270,7 @@ public class ShowMarketsController {
         purchaseTypeCol.setCellValueFactory(new PropertyValueFactory<>("purchaseType"));
 
 
-        tableView.getColumns().setAll(nameCol, serialCol,priceCol,purchaseTypeCol);
+        tableView.getColumns().setAll(nameCol, serialCol, priceCol, purchaseTypeCol);
 
         tableView.setPrefWidth(450);
         tableView.setPrefHeight(400);
