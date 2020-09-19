@@ -31,13 +31,10 @@ public class StoreHandler {
         return  sum/count;
     }
 
-    public OrderItem GetOrderItemByItemId(Store store, int itemSerialNumber) {
-
-        OrderItem orderItemRes = new OrderItem();
+    public OrderItem GetOrderItemByItemId(Store store, int itemSerialNumber, boolean clone) {
         for (OrderItem orderItem : store.Inventory) {
             if (orderItem.itemId == itemSerialNumber) {
-                orderItemRes = CloneOrderItem(orderItem);
-                return orderItemRes;
+                return clone ? CloneOrderItem(orderItem) : orderItem;
             }
         }
 
@@ -101,6 +98,8 @@ public class StoreHandler {
         return totalAmountOfItems;
     }
 
+
+
     public double countTotalCostItemsOfStoreInOrder(Order order, Store store) {
 
         double totalCost = 0;
@@ -121,9 +120,11 @@ public class StoreHandler {
         return countDeliveryPriceOfStoreInOrder(order, store)+countTotalCostItemsOfStoreInOrder(order, store);
     }
 
-    public boolean deleteItemFromStore(OrderItem itemToDelete, Store store,SuperDuperMarket superDuperMarket) {
-           if (countSellingStores(superDuperMarket, itemToDelete.itemId) > 1)
-               return store.Inventory.remove(itemToDelete);
+    public boolean deleteItemFromStore(Item itemToDelete, Store store,SuperDuperMarket superDuperMarket) {
+           if (countSellingStores(superDuperMarket, itemToDelete.serialNumber) > 1 && store.Inventory.stream().count()>1 ){
+               OrderItem oi = GetOrderItemByItemId(store, itemToDelete.serialNumber, false);
+               return store.Inventory.remove(oi);
+           }
 
            return false;
     }

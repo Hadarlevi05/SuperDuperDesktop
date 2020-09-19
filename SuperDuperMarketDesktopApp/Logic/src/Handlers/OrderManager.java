@@ -44,7 +44,7 @@ public class OrderManager {
 
             Store store = superDuperMarket.Stores.get(i);
 
-            OrderItem orderItem = new StoreHandler().GetOrderItemByItemId(store, itemSerialNumber);
+            OrderItem orderItem = new StoreHandler().GetOrderItemByItemId(store, itemSerialNumber, true);
 
             if (cheapestOrderItem == null) {
                 cheapestOrderItem = storeHandler.CloneOrderItem(orderItem);

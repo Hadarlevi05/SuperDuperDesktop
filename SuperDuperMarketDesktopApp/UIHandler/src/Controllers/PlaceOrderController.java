@@ -281,7 +281,7 @@ public class PlaceOrderController {
     private List<StoreItemTableOfStaticOrder> getItemsForStaticOrder(SuperDuperMarket superDuperMarket, OrderType orderType) {
         List<StoreItemTableOfStaticOrder> itemTable = new ArrayList<>();
         for (Item item : superDuperMarket.Items) {
-            OrderItem oi = storeHandler.GetOrderItemByItemId(selectStore.getValue(), item.serialNumber);
+            OrderItem oi = storeHandler.GetOrderItemByItemId(selectStore.getValue(), item.serialNumber, true);
             if (oi != null) {
                 itemTable.add(new StoreItemTableOfStaticOrder(item.serialNumber, item.name, oi.price, item.purchaseType));
             } else {

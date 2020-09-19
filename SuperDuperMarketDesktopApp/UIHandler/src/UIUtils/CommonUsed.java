@@ -72,29 +72,7 @@ public class CommonUsed {
 
         alert.showAndWait();
     }
-    public static boolean showDilemma(String dilemmaMsg)
-    {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("Confirmation Dialog");
-        alert.setHeaderText(dilemmaMsg);
-        alert.setContentText("Would you like to continue without committing the open changes?");
 
-        ButtonType buttonTypeOne = new ButtonType("Continue");
-        ButtonType buttonTypeTwo = new ButtonType("Cancel");
 
-        alert.getButtonTypes().setAll(buttonTypeOne, buttonTypeTwo);
 
-        Optional<ButtonType> result = alert.showAndWait();
-        return result.get() == buttonTypeOne;
-    }
-
-    public static boolean showConfirmation(String msg) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirmation Dialog");
-        alert.setHeaderText("Warning! Branch name will be changed to remote branch's name.");
-        alert.setContentText(msg);
-
-        Optional<ButtonType> result = alert.showAndWait();
-        return result.filter(buttonType -> buttonType == ButtonType.OK).isPresent();
-    }
 }

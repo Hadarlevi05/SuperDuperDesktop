@@ -8,7 +8,6 @@ public class Item {
         this.serialNumber = serialNumber;
         this.name = name;
         this.purchaseType = PurchaseType.valueOf(purchaseType.toUpperCase());
-        //this.soldItemsNumber = soldItemsNumber;
     }
     public Item(){
 
@@ -16,8 +15,6 @@ public class Item {
     public int serialNumber;
     public String name = null;
     public PurchaseType purchaseType;
-    //public int soldItemsNumber;
-
 
     public String getName() {
         return name;
@@ -27,4 +24,8 @@ public class Item {
         return serialNumber;
     }
 
+    @Override
+    public String toString() {
+        return name + " " + "[" + serialNumber + "]";
+    }
 }
