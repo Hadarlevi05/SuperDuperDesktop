@@ -9,7 +9,6 @@ import UIUtils.CommonUsed;
 import UIUtils.StoreItemTable;
 
 import UIUtils.StoreItemTableOfStaticOrder;
-import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -18,7 +17,6 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -100,13 +98,9 @@ public class ShowMarketsController {
                 grid.add(listView, 0, 0);
                 grid.add(tableView, 0, 1);
 
-                tableView.setFixedCellSize(25);
-                tableView.prefHeightProperty().bind(tableView.fixedCellSizeProperty().multiply(Bindings.size(tableView.getItems()).add(1.01)));
-                tableView.minHeightProperty().bind(tableView.prefHeightProperty());
-                tableView.maxHeightProperty().bind(tableView.prefHeightProperty());
 
-                ScrollBar s1 = new ScrollBar();
-                s1.setOrientation(Orientation.VERTICAL);
+
+
 
 
                 Button newButton = new Button();
@@ -128,7 +122,7 @@ public class ShowMarketsController {
                         }
                     }
                 });
-                grid.setHgap(20); //horizontal gap in pixels
+                grid.setHgap(20); //horizontal gap in pixels 
                 grid.setVgap(20);
                 newButton.setPadding(new Insets(3, 3, 0, 3));
                 grid.add(newButton, 0, 2);
