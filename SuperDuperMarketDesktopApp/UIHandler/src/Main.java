@@ -1,5 +1,6 @@
 import Controllers.MainController;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -26,11 +27,21 @@ public class Main extends Application {
 
         Scene scene = new Scene(head, 700, 500);
         scene.getStylesheets().add(getClass().getResource("/Css/Style1.css").toExternalForm());
-
         primaryStage.setScene(scene);
         mainController.setPrimaryStage(primaryStage);
         mainController.setScene(scene);
         primaryStage.show();
+
+        ChangeListener<Number> stageSizeListener = (observable, oldValue, newValue) ->{
+            System.out.println("Height: " + primaryStage.getHeight() + " Width: " + primaryStage.getWidth());
+            mainController.initialize(primaryStage);
+            //mainController.sdmHeader.
+            //grid.setAlignment(Pos.CENTER)
+        };
+
+
+        primaryStage.widthProperty().addListener(stageSizeListener);
+        primaryStage.heightProperty().addListener(stageSizeListener);
 
 
         //Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));

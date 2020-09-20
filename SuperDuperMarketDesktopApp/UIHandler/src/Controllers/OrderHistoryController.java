@@ -63,8 +63,8 @@ public class OrderHistoryController {
         for (Order order : superDuperMarket.Orders.ordersMap.values()) {
 
             ScrollPane scroll=new ScrollPane();
-            scroll.setPrefHeight(accodionPane.getHeight());
-            scroll.prefWidth(accodionPane.getWidth());
+            scroll.setFitToHeight(true);
+            scroll.setFitToWidth(true);
             TitledPane titledPane = new TitledPane();
             titledPane.setContent(scroll);
             scroll.setContent(orderHistoryVbox);
@@ -101,11 +101,14 @@ public class OrderHistoryController {
 
             }
             //accordion.getPanes().addAll(titledStoresPanes);
+            accordion.prefWidthProperty().bind(textPane.widthProperty());
+
             titledPane.setContent(accordion);
             i++;
             titledOrderPanes.add(titledPane);
 
         }
+        accodionPane.prefWidthProperty().bind(textPane.widthProperty());
         accodionPane.getPanes().addAll(titledOrderPanes);
         textPane.getChildren().clear();
         textPane.getChildren().add(accodionPane);

@@ -16,52 +16,95 @@ import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.util.*;
 
-public class MainController { @FXML
-private Text userName;
-    @FXML private Button changeUserButton;
-    @FXML private Text currentBranch;
-    @FXML private Button newBranchButton;
-    @FXML private Button resetBranchButton;
-    @FXML public Label sdmHeader;
-    @FXML private Button changeRepoButton;
-    @FXML private Button loadRepoButton;
-    @FXML private Button createNewRepoButton;
-    @FXML private Text currentRepo;
-    @FXML private Text pathRepo;
-    @FXML private Button changeLayoutButton;
-    @FXML private HBox layoutHbox;
-    @FXML private Button pinkButton;
-    @FXML private Button blueButton;
-    @FXML private Button greenButton;
-    @FXML private SplitPane mainSplitPane;
-    @FXML private Label magitLargeHeader;
-    @FXML private ComboBox<String> branchesOptionsComboBox;
-    @FXML private Button checkoutButton;
-    @FXML private Button deleteBranchButton;
-    @FXML private Pane textPane;
-    @FXML private Pane showStatusPane;
-    @FXML private AnchorPane treeAnchorPane;
-    @FXML private Text commitTreeHeader;
-    @FXML private Button showStatusButton;
-    @FXML private Button commitButton;
-    @FXML private Button pushButton;
-    @FXML private Button pullButton;
-    @FXML private Button mergeButton;
-    @FXML private Button cloneButton;
-    @FXML private Button fetchButton;
-    @FXML private Button showCommitData;
-    @FXML private Text wcStatusHeader;
-
+public class MainController {
+    @FXML
+    private Text userName;
+    @FXML
+    private Button changeUserButton;
+    @FXML
+    private Text currentBranch;
+    @FXML
+    private Button newBranchButton;
+    @FXML
+    private Button resetBranchButton;
+    @FXML
+    public Label sdmHeader;
+    @FXML
+    private Button changeRepoButton;
+    @FXML
+    private Button loadRepoButton;
+    @FXML
+    private Button createNewRepoButton;
+    @FXML
+    private Text currentRepo;
+    @FXML
+    private Text pathRepo;
+    @FXML
+    private Button changeLayoutButton;
+    @FXML
+    private HBox layoutHbox;
+    @FXML
+    private Button pinkButton;
+    @FXML
+    private Button blueButton;
+    @FXML
+    private Button greenButton;
+    @FXML
+    private SplitPane mainSplitPane;
+    @FXML
+    private Label magitLargeHeader;
+    @FXML
+    private ComboBox<String> branchesOptionsComboBox;
+    @FXML
+    private Button checkoutButton;
+    @FXML
+    private Button deleteBranchButton;
+    @FXML
+    private Pane textPane;
+    @FXML
+    private Pane showStatusPane;
+    @FXML
+    private AnchorPane treeAnchorPane;
+    @FXML
+    private Text commitTreeHeader;
+    @FXML
+    private Button showStatusButton;
+    @FXML
+    private Button commitButton;
+    @FXML
+    private Button pushButton;
+    @FXML
+    private Button pullButton;
+    @FXML
+    private Button mergeButton;
+    @FXML
+    private Button cloneButton;
+    @FXML
+    private Button fetchButton;
+    @FXML
+    private Button showCommitData;
+    @FXML
+    private Text wcStatusHeader;
+    @FXML
+    private GridPane gridHeader;
+    @FXML
+    private ColumnConstraints columnHeader;
+    @FXML
+    private ColumnConstraints columnButton;
+    @FXML
+    private ColumnConstraints footerColumn;
     //  =========================== Controllers ==================================
     private ShowMarketsController marketController = new ShowMarketsController();
     private ShowItemsController itemController = new ShowItemsController();
     private ShowCustomersController customersController = new ShowCustomersController();
 
     private PlaceOrderController placeOrderController = new PlaceOrderController();
-    private MapController mapController = new MapController();
+    public MapController mapController = new MapController();
     private OrderHistoryController orderHistoryController = new OrderHistoryController();
     //  =========================== Scene Builder ================================
     private ScrollPane scrollPane = new ScrollPane();
+    public boolean mapIsShow = false;
+
     //private PannableCanvas canvas;
 
     //  ================================ Utils ===================================
@@ -154,15 +197,33 @@ private Text userName;
         //isBlueButtonPressed = false;
     }
 
-    public void setPrimaryStage(Stage primaryStage){
+    public void setPrimaryStage(Stage primaryStage) {
         this.primaryStage = primaryStage;
     }
 
-    public void setScene(Scene scene){
+    public void setScene(Scene scene) {
         this.scene = scene;
     }
 
-    public void initialize() {
+    public void initialize(Stage primaryStage) {
+
+        /* your code */
+        //GridPane grid = new GridPane();
+        /* your code */
+        //ColumnConstraints column1 = new ColumnConstraints();
+        columnButton.setPercentWidth(20);
+        columnHeader.setPercentWidth(80);
+        footerColumn.setPercentWidth(100);
+        setPrimaryStage(primaryStage);
+        if (mapIsShow) {
+            mapController.refresh(textPane);
+        }
+        //gridHeader.getColumnConstraints().addAll()
+
+        /*columnButton.setPercentWidth(10);
+        columnHeader.setPercentWidth(20);
+
+        gridHeader.getColumnConstraints().addAll(columnButton,columnHeader);*/
         //layoutHbox.setVisible(false);
 
         //currentRepo.wrappingWidthProperty().set(120);
@@ -194,7 +255,7 @@ private Text userName;
         //});
     }
 
-    private void setRepoActionsAvailable(){
+    private void setRepoActionsAvailable() {
         showStatusButton.setDisable(false);
         branchesOptionsComboBox.setDisable(false);
         newBranchButton.setDisable(false);
@@ -209,50 +270,23 @@ private Text userName;
         pushButton.setDisable(false);
     }
 
-    //  ============================= Repo Functions ===============================
-    @FXML
-    void updateMagitUser() {
-        Optional<String> res = CommonUsed.showDialog("Change user name", "Enter your name:",
-                "Name:");
-        //res.ifPresent(name-> myMagit.setUserName(name));
-    }
     @FXML
     void showMaps() {
+        mapIsShow = true;
+        textPane.getChildren().clear();
         mapController.ShowStoresAndOrdersOnMap(superDuperMarket, textPane);
     }
+
     @FXML
     void placeOrder() {
+        mapIsShow = false;
+        textPane.getChildren().clear();
         placeOrderController.placeOrder(superDuperMarket, textPane);
     }
 
     @FXML
-    void createNewRepository() {
-        //DirectoryChooser directoryChooser = new DirectoryChooser();
-        //directoryChooser.setTitle("Create new repository!");
-//
-        //File selectFile = directoryChooser.showDialog(primaryStage);
-        //if (selectFile == null) {
-        //    return;
-        //}
-//
-        //MagitStringResultObject res = myMagit.createNewRepo(selectFile.getAbsolutePath(), "just a custom repo");
-        //if(isShowStatusOpen){
-        //    showStatusPane.getChildren().clear();
-        //    isShowStatusOpen = false;
-        //}
-        //if (!res.getIsHasError()) {
-        //    CommonUsed.showSuccess(res.getData());
-        //    setRepoActionsAvailable();
-        //    currentBranch.textProperty().unbind();
-        //    currentBranch.textProperty().bind(myMagit.getCurrentBranch());
-        //}
-        //else {
-        //    CommonUsed.showError(res.getErrorMSG());
-        //}
-    }
-
-    @FXML
     void loadSDMData() {
+        mapIsShow = false;
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select XML file!");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML file", "*.xml"));
@@ -263,242 +297,36 @@ private Text userName;
         }
 
         try {
-            if(isShowStatusOpen){
+            if (isShowStatusOpen) {
                 showStatusPane.getChildren().clear();
                 isShowStatusOpen = false;
             }
 
             SDMResultObject res =
                     superDuperMarket.loadSDMFromXML(selectFile.getAbsolutePath());
-            if (res.getIsHasError()){
+            if (res.getIsHasError()) {
                 CommonUsed.showError(res.getErrorMSG());
-            }
-            else {
+            } else {
                 CommonUsed.showSuccess("File loaded to system succesfully!");
             }
-        }
-        catch(JAXBException e){
+        } catch (JAXBException e) {
             CommonUsed.showError(e.getMessage());
         }
     }
 
     @FXML
-    void switchRepository() {
-        //DirectoryChooser directoryChooser = new DirectoryChooser();
-        //directoryChooser.setTitle("Select repository!");
-//
-        //File selectFile = directoryChooser.showDialog(primaryStage);
-        //if (selectFile == null) {
-        //    return;
-        //}
-//
-        //if(isShowStatusOpen){
-        //    showStatusPane.getChildren().clear();
-        //    isShowStatusOpen = false;
-        //}
-//
-        //MagitStringResultObject res = myMagit.changeRepository(selectFile.getAbsolutePath());
-        //if (!res.getIsHasError()) {
-        //    CommonUsed.showSuccess(res.getData());
-        //    setRepoActionsAvailable();
-        //    currentBranch.textProperty().unbind();
-        //    currentBranch.textProperty().bind(myMagit.getCurrentBranch());
-        //    pathRepo.textProperty().bind(myMagit.getPath());
-        //    createCommitTree();
-        //}
-        //else {
-        //    CommonUsed.showError(res.getErrorMSG());
-        //}
-
-    }
-
-    //  ============================ Branch Functions ==============================
-    @FXML
-    void deleteBranch() {
-        //try {
-        //    if(isShowStatusOpen){
-        //        showStatusPane.getChildren().clear();
-        //        isShowStatusOpen = false;
-        //    }
-//
-        //    MagitStringResultObject res = myMagit.deleteBranch(branchesOptionsComboBox.getValue());
-        //    if (!res.getIsHasError()) {
-        //        CommonUsed.showSuccess(res.getData());
-        //    }
-        //    else {
-        //        CommonUsed.showError(res.getErrorMSG());
-        //    }
-        //} catch (InvalidDataException e) {
-        //    CommonUsed.showError(e.getMessage());
-        //}
-    }
-
-    @FXML
-    void resetBranchToSpecificCommit() {
-        Optional<String> newCommitSha1 = CommonUsed.showDialog("Reset Head", "Enter commit SHA-1:",
-                "SHA-1:");
-
-        if(isShowStatusOpen){
-            showStatusPane.getChildren().clear();
-            isShowStatusOpen = false;
-        }
-
-        resetBranchToASpecificCommit(newCommitSha1, false);
-    }
-
-    private void resetBranchToASpecificCommit(Optional<String> newCommitSha1, boolean toIgnoreChanges) {
-        //newCommitSha1.ifPresent(sha1-> {
-        //    try {
-        //        MagitStringResultObject res = myMagit.resetBranch(sha1, toIgnoreChanges);
-        //        if (!res.getIsHasError()) {
-        //            CommonUsed.showSuccess(res.getData());
-        //            createCommitTree();
-        //        }
-        //        else {
-        //            CommonUsed.showError(res.getErrorMSG());
-        //        }
-        //    } catch (DirectoryNotEmptyException e) {
-        //        boolean toContinue = CommonUsed.showDilemma(e.getMessage());
-        //        if(toContinue) {
-        //            resetBranchToASpecificCommit(newCommitSha1, true);
-        //        }
-        //        else {
-        //            String errorMsg = "To reset commit first!";
-        //            CommonUsed.showSuccess(errorMsg);
-        //        }
-        //    }
-//
-        //});
-    }
-
-    @FXML
-    void checkoutBranch() {
-        if(isShowStatusOpen){
-            showStatusPane.getChildren().clear();
-            isShowStatusOpen = false;
-        }
-
-        checkoutABranch(false);
-    }
-
-    private void checkoutABranch(boolean toIgnoreChanges) {
-        //try {
-        //    MagitStringResultObject res = myMagit.checkoutBranch(branchesOptionsComboBox.getValue(), toIgnoreChanges);
-        //    if (!res.getIsHasError()) {
-        //        CommonUsed.showSuccess(res.getData());
-        //        currentBranch.textProperty().unbind();
-        //        currentBranch.textProperty().bind(myMagit.getCurrentBranch());
-        //        createCommitTree();
-        //    }
-        //    else {
-        //        CommonUsed.showError(res.getErrorMSG());
-        //    }
-        //} catch (DirectoryNotEmptyException e) {
-        //    boolean toContinue = CommonUsed.showDilemma(e.getMessage());
-        //    if(toContinue){
-        //        checkoutABranch(true);
-        //    }
-        //    else {
-        //        String errorMsg = "To checkout commit first!";
-        //        CommonUsed.showSuccess(errorMsg);
-        //    }
-        //}
-    }
-
-    @FXML
-    void createNewBranch() {
-        //Optional<Pair<String, String>> newBranchName = CommonUsed.showMultipleChoiceDialog("New Branch",
-        //        "Enter the following data:","Name:", "Sha1:");
-        //newBranchName.ifPresent(name -> {
-        //    if(!name.getValue().isEmpty()) {
-        //        createBranch(false, name.getKey(),
-        //                name.getValue(), false);
-        //        branchesOptionsComboBox.setItems(myMagit.getCurrentBranchesNames());
-//
-        //    } else {
-        //        createBranch(false, name.getKey(),
-        //                myMagit.getBranchByName(myMagit.getCurrentBranch().getValue()).getCommitSha1(), false);
-        //    }
-        //});
-    };
-
-    private void createBranch(boolean isRemoteTracking, String branchName, String branchSha1, boolean toIgnoreSha1) {
-        //try {
-        //    if(isShowStatusOpen){
-        //        showStatusPane.getChildren().clear();
-        //        isShowStatusOpen = false;
-        //    }
-//
-        //    MagitStringResultObject res = myMagit.addNewBranch(branchName, branchSha1, isRemoteTracking, toIgnoreSha1);
-        //    if (!res.getIsHasError()){
-        //        CommonUsed.showSuccess(res.getData());
-        //    }
-        //    else {
-        //        CommonUsed.showError(res.getErrorMSG());
-        //    }
-//
-        //} catch (InvalidDataException e) {
-        //    CommonUsed.showError(e.getMessage());
-        //    createNewBranch();
-        //} catch (DataAlreadyExistsException e) {
-        //    boolean isOk = CommonUsed.showConfirmation(e.getMessage());
-        //    if(isOk) {
-        //        String branch = myMagit.findBranchBySha1(branchSha1);
-        //        if(branch != null) {
-        //            createBranch(true, branch, branchSha1, true);
-        //        }
-        //    }
-        //    else {
-        //        createBranch(false, branchName, branchSha1, true);
-        //    }
-        //}
-    }
-
-    //  ============================ Commit Functions ==============================
-    @FXML
-    void createNewCommit() {
-        //Optional<String> commitMessage = CommonUsed.showDialog("New Commit",
-        //        "Enter a message for the commit:", "Message:");
-//
-        //commitMessage.ifPresent(msg -> {
-        //    if(isShowStatusOpen){
-        //        showStatusPane.getChildren().clear();
-        //        isShowStatusOpen = false;
-        //    }
-//
-        //    MagitStringResultObject result;
-        //    if (secondBranchCommitSha1 != null) {
-        //        result = myMagit.createNewCommit(msg, secondBranchCommitSha1);
-        //        secondBranchCommitSha1 = null;
-        //    }
-        //    else {
-        //        result = myMagit.createNewCommit(msg, null);
-        //    }
-        //    if (!result.getIsHasError()){
-        //        CommonUsed.showSuccess(result.getData());
-        //        if(result.getChanged()) {
-        //            addCommitToTree();
-        //        }
-        //    }
-        //    else {
-        //        CommonUsed.showError(result.getErrorMSG());
-        //    } });
-    }
-
     public void showOrderHistory(ActionEvent actionEvent) {
+        mapIsShow = false;
+        textPane.getChildren().clear();
         orderHistoryController.showOrderHistory(superDuperMarket, textPane);
-
     }
 
+    @FXML
     public void showCustomers(ActionEvent actionEvent) {
+        mapIsShow = false;
+        textPane.getChildren().clear();
         customersController.showCustomers(superDuperMarket, textPane);
-
     }
-
-
-//  ======================== Collaboration Functions ===========================
-
-
 
 }
 

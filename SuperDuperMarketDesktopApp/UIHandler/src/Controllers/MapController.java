@@ -15,10 +15,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 
 import java.util.TooManyListenersException;
@@ -27,21 +24,18 @@ public class MapController {
 
     private Accordion accodionPane;
     private LocationHandler locationHandler;
-
-    GridPane map = new GridPane();
+    private SuperDuperMarket superDuperMarket = null;
 
     public MapController() {
         locationHandler = new LocationHandler();
     }
 
     public void ShowStoresAndOrdersOnMap(SuperDuperMarket superDuperMarket, Pane textPane) {
-
+        ScrollPane scroll = new ScrollPane();
+        this.superDuperMarket = superDuperMarket;
         int rows = locationHandler.getMaxYOnMap(superDuperMarket.Stores, superDuperMarket.Customers) + 1;
         int columns = locationHandler.getMaxXOnMap(superDuperMarket.Stores, superDuperMarket.Customers) + 1;
-
         GridPane grid = new GridPane();
-
-
         int cc = (int) (textPane.getWidth() - 20) / columns;
         int rc = (int) (textPane.getHeight() - 20) / rows;
 
@@ -80,35 +74,29 @@ public class MapController {
             );
         }
 
-
         for (int i = 0; i < columns; i++) {
             ColumnConstraints column = new ColumnConstraints(cc);
+
+            column.setPercentWidth(100.0);
+            column.setHgrow(Priority.NEVER);
+
             grid.getColumnConstraints().add(column);
         }
 
         for (int i = 0; i < rows; i++) {
             RowConstraints row = new RowConstraints(rc);
+            row.setPercentHeight(100.0);
+            row.setVgrow(Priority.NEVER);
             grid.getRowConstraints().add(row);
         }
-/*
-        grid.setOnMouseReleased(new EventHandler<MouseEvent>() {
-            public void handle(MouseEvent me) {
-                grid.add(Anims.getAnim(1), (int)((me.getSceneX() - (me.getSceneX() % 40)) / 40), (int)((me.getSceneY() - (me.getSceneY() % 40)) / 40)); //here the getAnim argument could be between 1-7
-            }
-        });*/
-        grid.setOnMouseDragOver(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                int t = 3;
-            }
-        });
+
         grid.setStyle("-fx-background-color: white; -fx-grid-lines-visible: true");
-
-
         textPane.getChildren().clear();
 
-
-        textPane.getChildren().addAll(grid);
+        scroll.setContent(grid);
+        scroll.setFitToWidth(true);
+        scroll.setFitToHeight(true);
+        textPane.getChildren().addAll(scroll);
     }
 
     private void handleTooltip(MouseEvent event, SuperDuperMarket superDuperMarket, ImageView iv) {
@@ -140,5 +128,11 @@ public class MapController {
                 tooltip.hide();
             }
         });
+    }
+
+    public void refresh(Pane newPane) {
+        if (this.superDuperMarket !=null){
+            ShowStoresAndOrdersOnMap(superDuperMarket, newPane);
+        }
     }
 }

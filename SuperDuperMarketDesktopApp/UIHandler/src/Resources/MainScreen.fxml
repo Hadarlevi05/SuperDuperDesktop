@@ -9,11 +9,10 @@
 
 <BorderPane nodeOrientation="LEFT_TO_RIGHT" prefHeight="526.0" prefWidth="761.0" style="-fx-background-color: #DFE3EE; -fx-border-color: #221F1F; -fx-border-width: 5;" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.MainController">
     <top>
-        <GridPane prefHeight="60.0" prefWidth="596.0" BorderPane.alignment="CENTER">
+        <GridPane fx:id="gridHeader" prefHeight="60.0" prefWidth="596.0" BorderPane.alignment="CENTER">
             <columnConstraints>
-                <ColumnConstraints halignment="LEFT" hgrow="ALWAYS" maxWidth="169.0" minWidth="64.0" prefWidth="169.0" />
-                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" maxWidth="662.0" minWidth="400.0" prefWidth="560.0" />
-            <ColumnConstraints fillWidth="false" halignment="RIGHT" hgrow="ALWAYS" maxWidth="132.0" minWidth="15.0" prefWidth="19.0" />
+                <ColumnConstraints fx:id="columnButton" halignment="LEFT" hgrow="ALWAYS" maxWidth="169.0" minWidth="64.0" prefWidth="161.0" />
+                <ColumnConstraints fx:id="columnHeader" halignment="CENTER" hgrow="ALWAYS" maxWidth="662.0" minWidth="400.0" prefWidth="590.0" />
             </columnConstraints>
             <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="ALWAYS" />
@@ -57,15 +56,13 @@
     <bottom>
         <GridPane prefHeight="40.0" prefWidth="679.0" BorderPane.alignment="TOP_RIGHT">
             <columnConstraints>
-                <ColumnConstraints halignment="LEFT" hgrow="ALWAYS" maxWidth="194.0" minWidth="10.0" prefWidth="113.4" />
-                <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="436.20000000000005" />
-                <ColumnConstraints fillWidth="false" halignment="RIGHT" hgrow="ALWAYS" maxWidth="136.00004882812505" minWidth="10.0" prefWidth="123.79998779296875" />
+                <ColumnConstraints fx:id="footerColumn" halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="436.20000000000005" />
             </columnConstraints>
             <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <HBox alignment="CENTER" focusTraversable="true" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="40.0" prefWidth="430.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="NEVER">
+                <HBox alignment="CENTER" focusTraversable="true" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="40.0" prefWidth="306.0" GridPane.hgrow="ALWAYS" GridPane.vgrow="NEVER">
                     <children>
                         <Button fx:id="loadRepoButton" contentDisplay="RIGHT" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#loadSDMData" prefHeight="30.0" prefWidth="221.0" text="Load Super Duper Data" textFill="#1b476d">
                             <font>
@@ -94,7 +91,9 @@
         </GridPane>
     </bottom>
     <center>
-        <SplitPane fx:id="mainTextWindow" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="380.0" prefWidth="430.0" style="-fx-background-color: #3B5998; -fx-background-radius: 10;" BorderPane.alignment="CENTER">
+        <SplitPane fx:id="mainTextWindow" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="380.0" prefWidth="430.0" style="-fx-background-color: #3B5998; -fx-background-radius: 10;" BorderPane.alignment="CENTER" GridPane.columnIndex="1"
+                   AnchorPane.topAnchor="0" AnchorPane.rightAnchor="0"
+                   AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0">
             <items>
                 <AnchorPane minWidth="0.0" prefHeight="404.0" prefWidth="590.0">
                     <children>
