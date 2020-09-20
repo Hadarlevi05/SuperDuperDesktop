@@ -22,7 +22,7 @@ private Text userName;
     @FXML private Text currentBranch;
     @FXML private Button newBranchButton;
     @FXML private Button resetBranchButton;
-    @FXML private Label sdmHeader;
+    @FXML public Label sdmHeader;
     @FXML private Button changeRepoButton;
     @FXML private Button loadRepoButton;
     @FXML private Button createNewRepoButton;

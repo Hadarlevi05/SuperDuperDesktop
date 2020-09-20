@@ -42,63 +42,51 @@ public class MapController {
         GridPane grid = new GridPane();
 
 
-        int cc = (int)(textPane.getWidth() - 20) / columns;
-        int rc = (int)(textPane.getHeight() - 20) / rows;
+        int cc = (int) (textPane.getWidth() - 20) / columns;
+        int rc = (int) (textPane.getHeight() - 20) / rows;
 
-        for (Store store: superDuperMarket.Stores) {
+        for (Store store : superDuperMarket.Stores) {
             Image image = new Image(getClass().getResource("/Resources/Images/store32.png").toExternalForm());
             //grid.getChildren().add(new ImageView(image));
             ImageView iv = new ImageView(image);
-            iv.setId("Store_"+store.serialNumber);
+            iv.setId("Store_" + store.serialNumber);
             iv.setFitWidth(cc);
             iv.setFitHeight(rc);
-            grid.add(iv, store.Location.x,store.Location.y);
+            grid.add(iv, store.Location.x, store.Location.y);
             iv.setOnMouseEntered(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-                    Tooltip tp = null;
-                    String mystring = new String((String) ((ImageView)event.getTarget()).getId());
-                    if (mystring.contains("Store")){
-                        Store store = new StoreHandler().getStoreById(superDuperMarket, Integer.parseInt(mystring.substring(6)));
-                        tp = new Tooltip("ID: "+store.serialNumber + "\n" + "Name: "+store.name);
-                    }
-                    else{
-                        Customer customer = new CustomerHandler().getCustomerByID(superDuperMarket, Integer.parseInt(mystring.substring(9)));
-                        tp = new Tooltip("ID: "+customer.serialNumber + "\n" + "Name: "+customer.name);
-                    }
-                    bindTooltip(iv, tp);
-                    //tp.setAutoHide(true);
-                    //Node node =(Node)event.getSource();
-                    //tp.show(node, event.getScreenX() + 50, event.getScreenY());
-                }
-            }
+                                     @Override
+                                     public void handle(MouseEvent event) {
+                                         handleTooltip(event, superDuperMarket, iv);
+                                     }
+                                 }
             );
 
         }
 
-        for (Customer customer: superDuperMarket.Customers) {
+        for (Customer customer : superDuperMarket.Customers) {
             Image image = new Image(getClass().getResource("/Resources/Images/user32.png").toExternalForm());
             //grid.getChildren().add(new ImageView(image));
             ImageView iv = new ImageView(image);
-            iv.setId("Customer_"+customer.serialNumber);
+            iv.setId("Customer_" + customer.serialNumber);
             iv.setFitWidth(cc);
             iv.setFitHeight(rc);
             grid.add(iv, customer.location.x, customer.location.y);
             iv.setOnMouseEntered(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-                    int t = 3;
-                }
-            });
+                                     @Override
+                                     public void handle(MouseEvent event) {
+                                         handleTooltip(event, superDuperMarket, iv);
+                                     }
+                                 }
+            );
         }
 
 
-        for(int i = 0; i < columns; i++) {
+        for (int i = 0; i < columns; i++) {
             ColumnConstraints column = new ColumnConstraints(cc);
             grid.getColumnConstraints().add(column);
         }
 
-        for(int i = 0; i < rows; i++) {
+        for (int i = 0; i < rows; i++) {
             RowConstraints row = new RowConstraints(rc);
             grid.getRowConstraints().add(row);
         }
@@ -117,15 +105,27 @@ public class MapController {
         grid.setStyle("-fx-background-color: white; -fx-grid-lines-visible: true");
 
 
-
-
         textPane.getChildren().clear();
 
 
         textPane.getChildren().addAll(grid);
     }
-    public static void bindTooltip(final Node node, final Tooltip tooltip){
-        node.setOnMouseMoved(new EventHandler<MouseEvent>(){
+
+    private void handleTooltip(MouseEvent event, SuperDuperMarket superDuperMarket, ImageView iv) {
+        Tooltip tp = null;
+        String mystring = new String((String) ((ImageView) event.getTarget()).getId());
+        if (mystring.contains("Store")) {
+            Store store = new StoreHandler().getStoreById(superDuperMarket, Integer.parseInt(mystring.substring(6)));
+            tp = new Tooltip("ID: " + store.serialNumber + "\n" + "Name: " + store.name);
+        } else {
+            Customer customer = new CustomerHandler().getCustomerByID(superDuperMarket, Integer.parseInt(mystring.substring(9)));
+            tp = new Tooltip("ID: " + customer.serialNumber + "\n" + "Name: " + customer.name);
+        }
+        bindTooltip(iv, tp);
+    }
+
+    public static void bindTooltip(final Node node, final Tooltip tooltip) {
+        node.setOnMouseMoved(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 // +15 moves the tooltip 15 pixels below the mouse cursor;
@@ -134,9 +134,9 @@ public class MapController {
                 tooltip.show(node, event.getScreenX(), event.getScreenY() + 15);
             }
         });
-        node.setOnMouseExited(new EventHandler<MouseEvent>(){
+        node.setOnMouseExited(new EventHandler<MouseEvent>() {
             @Override
-            public void handle(MouseEvent event){
+            public void handle(MouseEvent event) {
                 tooltip.hide();
             }
         });
