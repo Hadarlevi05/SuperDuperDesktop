@@ -192,7 +192,7 @@ public class OrderDetailsController {
 
 
         Label label = new Label("Order Details");
-        label.setTextFill(Color.DARKBLUE);
+        //label.setTextFill(Color.DARKBLUE);
         label.setFont(Font.font("Calibri", FontWeight.BOLD, 32));
 
         HBox hb = new HBox();
@@ -201,7 +201,7 @@ public class OrderDetailsController {
 
         // Status message text
         Text actionStatus = new Text();
-        actionStatus.setFill(Color.FIREBRICK);
+        //actionStatus.setFill(Color.FIREBRICK);
 
         // Vbox
         VBox vbox = new VBox(20);

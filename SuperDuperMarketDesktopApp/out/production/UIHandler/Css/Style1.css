@@ -23,6 +23,7 @@
 }
 
 #sdmHeader{
+    -fx-font-family: "Georgia";
     -fx-text-fill: #4c86c3;
     -fx-font-size: 28px;
     -fx-font-weight: bold;
@@ -59,6 +60,15 @@
     -fx-font-weight: bold;
 }
 
+#mainTextWindow{
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 10;
+}
+
+#textPane {
+    -fx-background-color: #b1dae5;
+    -fx-background-radius: 7;
+}
 #checkoutButton {
     -fx-text-fill: #1b476d;
     -fx-font-size: 11px;
