@@ -361,7 +361,7 @@ public class PlaceOrderController {
         itemsTableStaticOrder.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         itemsTableStaticOrder.scrollTo(0);
         Label label = new Label("Items");
-        label.setTextFill(Color.DARKBLUE);
+        // label.setTextFill(Color.DARKBLUE);
         label.setFont(Font.font("Calibri", FontWeight.BOLD, 36));
 
         HBox hb = new HBox();

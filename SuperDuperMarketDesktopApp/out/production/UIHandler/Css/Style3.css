@@ -1,62 +1,57 @@
 .root {
-    -fx-background-color: #DFE3EE;
+    -fx-background-color: #9b56a7;
     -fx-border-color:  #221F1F;
     -fx-border-width: 5;
 }
 
-#menuButtons {
-    -fx-padding: 25px 65px;
+.button {
+    -fx-background-color: #c498cb;
+    -fx-border-color: #39303b;
+    -fx-border-radius: 5;
+    -fx-background-radius: 7;
+    -fx-text-fill: #4c484f;
     -fx-font-size: 10px;
     -fx-text-alignment: center;
-    -fx-text-fill: #1b476d;
-    -fx-background-color: #f0f0f0;
 }
 
 .button:hover {
-    -fx-effect: dropshadow(three-pass-box, #6b5b95, 10, 0.3, 5, 3);
+    -fx-effect: dropshadow(three-pass-box, #bba8ec, 10, 0.3, 5, 3);
 }
 
 .button:pressed {
-    -fx-background-color:  #6b5b95;
-    -fx-effect: dropshadow(three-pass-box, #92a8d1, 10, 0.3, 5, 3);
+    -fx-background-color: #c194ca;
+    -fx-effect: dropshadow(three-pass-box, #a888b3, 10, 0.3, 5, 3);
     -fx-translate-y: 2px;
 }
 
 #sdmHeader{
-    -fx-font-family: "Georgia";
-    -fx-text-fill: #4c86c3;
-    -fx-font-size: 28px;
+    -fx-text-fill: #c194ca;
+    -fx-font-size: 32px;
     -fx-font-weight: bold;
-    -fx-effect: innershadow(three-pass-box, black, 5.13, 0.55, 0.0, 0.0);
+    -fx-effect: innershadow(three-pass-box, #b37bca, 5.13, 0.55, 0.0, 0.0);
     -fx-text-alignment: center;
 }
 #CustomerComboBox{
-    -fx-text-fill: #4c86c3;
+    -fx-text-fill: #c194ca;
     -fx-font-size: 23px;
     -fx-font-weight: bold;
-    -fx-effect: innershadow(three-pass-box, black, 5.13, 0.55, 0.0, 0.0);
+    -fx-effect: innershadow(three-pass-box, #b781c6, 5.13, 0.55, 0.0, 0.0);
     -fx-text-alignment: center;}
 
 #magitBranchButtons {
-    -fx-text-fill: #4499ea;
+    -fx-text-fill: #b78cc3;
     -fx-font-size: 10px;
 }
 
 #userName {
     -fx-font-size: 10px;
     -fx-font-family: "System";
-    -fx-text-fill: #386895;
+    -fx-text-fill: #ae7bbc;
 }
 
 #magitLargeHeader {
-    -fx-text-fill: #052f59;
+    -fx-text-fill: #c194ca;
     -fx-font-size: 14px;
-    -fx-font-weight: bold;
-}
-
-.label {
-    -fx-text-fill: #052f59;
-    -fx-font-size: 11px;
     -fx-font-weight: bold;
 }
 
@@ -66,11 +61,17 @@
 }
 
 #textPane {
-    -fx-background-color: #b1dae5;
+    -fx-background-color: #eacbf5;
     -fx-background-radius: 7;
 }
+.label {
+    -fx-text-fill: #c194ca;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
 #checkoutButton {
-    -fx-text-fill: #1b476d;
+    -fx-text-fill: #c194ca;
     -fx-font-size: 11px;
 }
 
@@ -87,13 +88,13 @@
 }
 
 .split-pane {
-    -fx-background-color:  #3B5998;
+    -fx-background-color: #c194ca;
     -fx-border-radius: 10;
 }
 .onSale-label {
-    -fx-text-fill: #eaece5;
+    -fx-text-fill: #c194ca;
     -fx-font-weight: bold;
     -fx-font-size: 10px;
-    -fx-background-color:  #FF0000;
+    -fx-background-color: #c98fde;
 
 }

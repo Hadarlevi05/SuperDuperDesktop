@@ -11,6 +11,8 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.control.Button;
 
 import javax.xml.bind.JAXBException;
 import java.io.File;
@@ -93,19 +95,18 @@ public class MainController {
     private ColumnConstraints columnButton;
     @FXML
     private ColumnConstraints footerColumn;
+
     //  =========================== Controllers ==================================
     private ShowMarketsController marketController = new ShowMarketsController();
     private ShowItemsController itemController = new ShowItemsController();
     private ShowCustomersController customersController = new ShowCustomersController();
-
     private PlaceOrderController placeOrderController = new PlaceOrderController();
     public MapController mapController = new MapController();
     private OrderHistoryController orderHistoryController = new OrderHistoryController();
     //  =========================== Scene Builder ================================
     private ScrollPane scrollPane = new ScrollPane();
+    private Canvas canvas;
     public boolean mapIsShow = false;
-
-    //private PannableCanvas canvas;
 
     //  ================================ Utils ===================================
     //private Graph commitTreeGraph = new Graph();
@@ -140,61 +141,58 @@ public class MainController {
 
     @FXML
     void changeStyleToBlue(ActionEvent event) {
-        //primaryStage.getScene().getStylesheets().clear();
-        //primaryStage.getScene().getStylesheets().add(getClass().getResource("/Css/Style1.css").toExternalForm());
-        //if(canvas != null) {
-        //    canvas.setBackground(Background.EMPTY);
-        //    style = "-fx-background-color: #3B5998";
-        //    canvas.setStyle(style);
-        //    scrollPane.setContent(canvas);
-        //    treeAnchorPane.getChildren().clear();
-        //    treeAnchorPane.getChildren().add(scrollPane);
-        //    setTreeBoundaries();
-        //    primaryStage.getScene().getStylesheets().add(getClass().getResource("/Css/CommitNode.css").toExternalForm());
-        //}
-//
-        //isBlueButtonPressed = true;
-        //isGreenButtonPressed = false;
-        //isPinkButtonPressed = false;
+        primaryStage.getScene().getStylesheets().clear();
+        primaryStage.getScene().getStylesheets().add(getClass().getResource("/Css/Style1.css").toExternalForm());
+        if(canvas != null) {
+           //canvas..setBackground(Background.EMPTY);
+            //style = "-fx-background-color: #3B5998";
+           canvas.setStyle(style);
+           scrollPane.setContent(canvas);
+            treeAnchorPane.getChildren().clear();
+          treeAnchorPane.getChildren().add(scrollPane);
+
+          // primaryStage.getScene().getStylesheets().add(getClass().getResource("/Css/CommitNode.css").toExternalForm());
+        }
+
+        isBlueButtonPressed = true;
+        isGreenButtonPressed = false;
+        isPinkButtonPressed = false;
     }
 
     @FXML
     void changeStyleToGreen(ActionEvent event) {
-        //primaryStage.getScene().getStylesheets().clear();
-        //primaryStage.getScene().getStylesheets().add(getClass().getResource("/Css/Style 2.css").toExternalForm());
-        //if(canvas != null) {
-        //    canvas.setBackground(Background.EMPTY);
-        //    style = "-fx-background-color: #405d27";
-        //    canvas.setStyle(style);
-        //    scrollPane.setContent(canvas);
-        //    treeAnchorPane.getChildren().clear();
-        //    treeAnchorPane.getChildren().add(scrollPane);
-        //    setTreeBoundaries();
-        //    primaryStage.getScene().getStylesheets().add(getClass().getResource("/Css/CommitNode2.css").toExternalForm());
-        //}
-        //isGreenButtonPressed = true;
-        //isBlueButtonPressed = false;
-        //isPinkButtonPressed = false;
+        primaryStage.getScene().getStylesheets().clear();
+        primaryStage.getScene().getStylesheets().add(getClass().getResource("/Css/Style2.css").toExternalForm());
+        if(canvas != null) {
+          // canvas.setBackground(Background.EMPTY);
+           //style = "-fx-background-color: #405d27";
+           canvas.setStyle(style);
+            scrollPane.setContent(canvas);
+           treeAnchorPane.getChildren().clear();
+           treeAnchorPane.getChildren().add(scrollPane);
+           //primaryStage.getScene().getStylesheets().add(getClass().getResource("/Css/CommitNode2.css").toExternalForm());
+        }
+        isGreenButtonPressed = true;
+        isBlueButtonPressed = false;
+        isPinkButtonPressed = false;
     }
 
     @FXML
     void changeStyleToPink(ActionEvent event) {
-        //primaryStage.getScene().getStylesheets().clear();
-        //primaryStage.getScene().getStylesheets().add(getClass().getResource("/Css/Style 3.css").toExternalForm());
-        //if(canvas != null) {
-        //    canvas.setBackground(Background.EMPTY);
-        //    style = "-fx-background-color: #622569";
-        //    canvas.setStyle(style);
-        //    scrollPane.setContent(canvas);
-        //    treeAnchorPane.getChildren().clear();
-        //    treeAnchorPane.getChildren().add(scrollPane);
-        //    setTreeBoundaries();
-        //    primaryStage.getScene().getStylesheets().add(getClass().getResource("/Css/CommitNode3.css").toExternalForm());
-        //}
-//
-        //isPinkButtonPressed = true;
-        //isGreenButtonPressed = false;
-        //isBlueButtonPressed = false;
+        primaryStage.getScene().getStylesheets().clear();
+        primaryStage.getScene().getStylesheets().add(getClass().getResource("/Css/Style3.css").toExternalForm());
+        if(canvas != null) {
+          //style = "-fx-background-color: #622569";
+            canvas.setStyle(style);
+            scrollPane.setContent(canvas);
+            treeAnchorPane.getChildren().clear();
+            treeAnchorPane.getChildren().add(scrollPane);
+           // primaryStage.getScene().getStylesheets().add(getClass().getResource("/Css/CommitNode3.css").toExternalForm());
+        }
+
+        isPinkButtonPressed = true;
+        isGreenButtonPressed = false;
+        isBlueButtonPressed = false;
     }
 
     public void setPrimaryStage(Stage primaryStage) {
@@ -224,36 +222,11 @@ public class MainController {
         columnHeader.setPercentWidth(20);
 
         gridHeader.getColumnConstraints().addAll(columnButton,columnHeader);*/
-        //layoutHbox.setVisible(false);
-
-        //currentRepo.wrappingWidthProperty().set(120);
-        //userName.wrappingWidthProperty().set(70);
-        //currentBranch.wrappingWidthProperty().set(50);
-
-        //userName.textProperty().bind(myMagit.getUserName());
-        //currentRepo.textProperty().bind(myMagit.getRepoName());
-        //currentBranch.textProperty().bind(myMagit.getCurrentBranch());
-
-        //treeAnchorPane.prefWidthProperty().bind(mainSplitPane.widthProperty());
-
-        //newBranchButton.setDisable(true);
-        //resetBranchButton.setDisable(true);
-        //commitButton.setDisable(true);
-        //showStatusButton.setDisable(true);
-        //pushButton.setDisable(true);
-        //pullButton.setDisable(true);
-        //mergeButton.setDisable(true);
-        //cloneButton.setDisable(true);
-        //fetchButton.setDisable(true);
-        //branchesOptionsComboBox.setDisable(true);
-        //checkoutButton.setDisable(true);
-        //deleteBranchButton.setDisable(true);
-        //showCommitData.setDisable(true);
-        //branchesOptionsComboBox.setOnAction(e -> {
-        //    deleteBranchButton.setDisable(false);
-        //    checkoutButton.setDisable(false);
-        //});
+        layoutHbox.setVisible(false);
     }
+
+
+
 
     private void setRepoActionsAvailable() {
         showStatusButton.setDisable(false);
@@ -298,7 +271,7 @@ public class MainController {
 
         try {
             if (isShowStatusOpen) {
-                showStatusPane.getChildren().clear();
+                //showStatusPane.getChildren().clear();
                 isShowStatusOpen = false;
             }
 

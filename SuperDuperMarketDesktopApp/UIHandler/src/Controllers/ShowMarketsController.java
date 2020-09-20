@@ -273,7 +273,7 @@ public class ShowMarketsController {
 
 
         Label label = new Label("Items");
-        label.setTextFill(Color.DARKBLUE);
+        //label.setTextFill(Color.DARKBLUE);
         label.setFont(Font.font("Calibri", FontWeight.BOLD, 36));
 
         HBox hb = new HBox();
@@ -282,7 +282,7 @@ public class ShowMarketsController {
 
         // Status message text
         Text actionStatus = new Text();
-        actionStatus.setFill(Color.FIREBRICK);
+        //actionStatus.setFill(Color.FIREBRICK);
 
         // Vbox
         VBox vbox = new VBox(20);

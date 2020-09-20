@@ -7,6 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
+<?import java.lang.String?>
 <BorderPane nodeOrientation="LEFT_TO_RIGHT" prefHeight="526.0" prefWidth="761.0" style="-fx-background-color: #DFE3EE; -fx-border-color: #221F1F; -fx-border-width: 5;" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.MainController">
     <top>
         <GridPane fx:id="gridHeader" prefHeight="60.0" prefWidth="596.0" BorderPane.alignment="CENTER">
@@ -20,7 +21,7 @@
             <children>
                 <Label fx:id="sdmHeader" alignment="CENTER" contentDisplay="TEXT_ONLY" maxHeight="-Infinity" prefHeight="57.0" prefWidth="561.0" text="Super duper market" textAlignment="CENTER" textFill="#4c86c3e8" textOverrun="CENTER_ELLIPSIS" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="NEVER">
                     <font>
-                        <Font name="Stencil" size="41.0" />
+                        <Font size="41.0" />
                     </font>
                     <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="10.0" />
@@ -63,6 +64,7 @@
             </rowConstraints>
             <children>
                 <HBox alignment="CENTER" focusTraversable="true" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="40.0" prefWidth="306.0" GridPane.hgrow="ALWAYS" GridPane.vgrow="NEVER">
+
                     <children>
                         <Button fx:id="loadRepoButton" contentDisplay="RIGHT" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#loadSDMData" prefHeight="30.0" prefWidth="221.0" text="Load Super Duper Data" textFill="#1b476d">
                             <font>
@@ -84,6 +86,85 @@
                         <Insets />
                     </GridPane.margin>
                 </HBox>
+
+                <VBox prefHeight="40.0" prefWidth="130.0" GridPane.columnIndex="2">
+                    <children>
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                            <children>
+                                <Label text="Change layout?">
+                                    <font>
+                                        <Font name="System Bold" size="10.0" />
+                                    </font>
+                                    <HBox.margin>
+                                        <Insets left="15.0" right="10.0" top="3.0" />
+                                    </HBox.margin>
+                                </Label>
+                                <Button fx:id="changeLayoutButton" mnemonicParsing="false" onAction="#showLayoutButtons">
+                                    <font>
+                                        <Font size="9.0" />
+                                    </font>
+                                    <graphic>
+                                        <ImageView fitHeight="15.0" fitWidth="15.0">
+                                            <image>
+                                                <Image url="@Images/v.png" />
+                                            </image>
+                                            <styleClass>
+                                                <String fx:value=".button" />
+                                                <String fx:value="#menuButtons" />
+                                            </styleClass>
+                                        </ImageView>
+                                    </graphic>
+                                    <HBox.margin>
+                                        <Insets top="2.0" />
+                                    </HBox.margin>
+                                    <padding>
+                                        <Insets right="1.0" />
+                                    </padding>
+                                </Button>
+                            </children>
+                        </HBox>
+                        <HBox fx:id="layoutHbox" prefHeight="100.0" prefWidth="200.0">
+                            <children>
+                                <Button fx:id="pinkButton" mnemonicParsing="false" onAction="#changeStyleToPink" prefHeight="0.0" prefWidth="35.0" text="Pink">
+                                    <font>
+                                        <Font size="9.0" />
+                                    </font>
+                                    <HBox.margin>
+                                        <Insets bottom="5.0" left="3.0" right="3.0" />
+                                    </HBox.margin>
+                                    <styleClass>
+                                        <String fx:value=".button" />
+                                        <String fx:value="#layoutButtons" />
+                                    </styleClass>
+                                </Button>
+                                <Button fx:id="blueButton" mnemonicParsing="false" onAction="#changeStyleToBlue" prefWidth="35.0" text="Blue">
+                                    <font>
+                                        <Font size="9.0" />
+                                    </font>
+                                    <HBox.margin>
+                                        <Insets bottom="5.0" right="3.0" />
+                                    </HBox.margin>
+                                    <styleClass>
+                                        <String fx:value=".button" />
+                                        <String fx:value="#layoutButtons" />
+                                    </styleClass>
+                                </Button>
+                                <Button fx:id="greenButton" mnemonicParsing="false" onAction="#changeStyleToGreen" prefWidth="40.0" text="Green">
+                                    <font>
+                                        <Font size="9.0" />
+                                    </font>
+                                    <HBox.margin>
+                                        <Insets bottom="5.0" />
+                                    </HBox.margin>
+                                    <styleClass>
+                                        <String fx:value=".button" />
+                                        <String fx:value="#layoutButtons" />
+                                    </styleClass>
+                                </Button>
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
             </children>
             <BorderPane.margin>
                 <Insets />
@@ -91,13 +172,14 @@
         </GridPane>
     </bottom>
     <center>
-        <SplitPane fx:id="mainTextWindow" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="380.0" prefWidth="430.0" style="-fx-background-color: #3B5998; -fx-background-radius: 10;" BorderPane.alignment="CENTER" GridPane.columnIndex="1"
+
+        <SplitPane fx:id="mainTextWindow" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="380.0" prefWidth="430.0"  BorderPane.alignment="CENTER">
                    AnchorPane.topAnchor="0" AnchorPane.rightAnchor="0"
                    AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0">
             <items>
                 <AnchorPane minWidth="0.0" prefHeight="404.0" prefWidth="590.0">
                     <children>
-                        <Pane fx:id="textPane" layoutX="12.0" layoutY="20.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="382.0" prefWidth="559.0" style="-fx-background-color: #8B9DC3; -fx-background-radius: 7;" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="20.0" />
+                        <Pane fx:id="textPane" layoutX="12.0" layoutY="20.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="382.0" prefWidth="559.0"  AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="20.0" />
                     </children>
                 </AnchorPane>
             </items>
@@ -107,11 +189,11 @@
         <Insets top="10.0" />
     </padding>
     <left>
-        <Pane fx:id="treeViewPane" prefHeight="406.0" prefWidth="166.0" style="-fx-border-color: #3B5998; -fx-border-width: 2; -fx-border-radius: 5;" BorderPane.alignment="CENTER">
+        <Pane fx:id="treeViewPane" prefHeight="406.0" prefWidth="166.0"  BorderPane.alignment="CENTER">
             <children>
                 <ScrollPane fx:id="treeScrollPane" layoutX="4.0" layoutY="45.0" prefHeight="329.0" prefWidth="159.0">
                     <content>
-                        <AnchorPane fx:id="treeAnchorPane" focusTraversable="true" prefHeight="326.0" prefWidth="168.0" style="-fx-background-color: #DFE3EE;">
+                        <AnchorPane fx:id="treeAnchorPane" focusTraversable="true" prefHeight="326.0" prefWidth="168.0" >
                      <children>
                             <Button fx:id="showStatusButton" contentDisplay="RIGHT" layoutX="13.0" layoutY="71.0" mnemonicParsing="false" onAction="#showMarkets" prefHeight="41.0" prefWidth="130.0" text="Show Stores" textFill="#1b476d">
                                 <font>
