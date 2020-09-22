@@ -44,47 +44,49 @@ public class SaleController {
         this.discounts = discounts;
         int height = 0;
         for (Discount discount: discounts) {
-
-            onSaleLabel.setText(discount.Name);
-            //vboxSales.getChildren().add(onSaleLabel);
-            if (discount.OperatorType == OperatorTypeOfSale.ALL_OR_NOTHING){
-                lblDiscountOperator.setText("To add all following offers to your order press on any item");
-                Button bt = new Button();
-                bt.setText("Add");
-            }else if(discount.OperatorType == OperatorTypeOfSale.ONE_OF){
-                lblDiscountOperator.setText("Please select one of the following offers you would like to add to your order");
-            }
-            try {
-                for (Offer offer:discount.Offers) {
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Resources/Discount.fxml"));
-                    vboxSales.getChildren().add(fxmlLoader.load());
-                    DiscountComponent saleComponent = fxmlLoader.getController();
-
-                    childs.add(saleComponent);
-
-                    saleComponent.SetDiscount(sdm,offer, discount);
-                    saleComponent.setLayoutY(height * 200);
-                    saleComponent.setCheckboxSelectCallback(selectedItemInDiscount -> {
-                        updateselectedItemInDiscount(selectedItemInDiscount);
-
-                        if (selectedItemInDiscount.operatorTypeOfSale == OperatorTypeOfSale.ONE_OF) {
-                            SetOneOf(selectedItemInDiscount.itemID, selectedItemInDiscount.selected);
-                        } else if (selectedItemInDiscount.operatorTypeOfSale == OperatorTypeOfSale.ALL_OR_NOTHING) {
-                            SetAllOrNothing(selectedItemInDiscount.selected);
-                        }
-                    });
-                    height++;
-                    //Checkbox tb = (Checkbox)saleComponent.lookup("#cbxSelectDiscount");
+          //  for(int i=0; i< discount.numOfOffers; i++)
+           // {
+                onSaleLabel.setText(discount.Name);
+                //vboxSales.getChildren().add(onSaleLabel);
+                if (discount.OperatorType == OperatorTypeOfSale.ALL_OR_NOTHING){
+                    lblDiscountOperator.setText("To add all following offers to your order press on any item");
+                    Button bt = new Button();
+                    bt.setText("Add");
+                }else if(discount.OperatorType == OperatorTypeOfSale.ONE_OF){
+                    lblDiscountOperator.setText("Please select one of the following offers you would like to add to your order");
                 }
-            } catch (IOException exception) {
-                throw new RuntimeException(exception);
+                try {
+                    for (Offer offer:discount.Offers) {
+                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Resources/Discount.fxml"));
+                        vboxSales.getChildren().add(fxmlLoader.load());
+                        DiscountComponent saleComponent = fxmlLoader.getController();
+
+                        childs.add(saleComponent);
+
+                        saleComponent.SetDiscount(sdm,offer, discount);
+                        saleComponent.setLayoutY(height * 200);
+                        saleComponent.setCheckboxSelectCallback(selectedItemInDiscount -> {
+                            updateselectedItemInDiscount(selectedItemInDiscount);
+
+                            if (selectedItemInDiscount.operatorTypeOfSale == OperatorTypeOfSale.ONE_OF) {
+                                SetOneOf(selectedItemInDiscount);
+                            } else if (selectedItemInDiscount.operatorTypeOfSale == OperatorTypeOfSale.ALL_OR_NOTHING) {
+                                SetAllOrNothing(selectedItemInDiscount.selected);
+                            }
+                        });
+                        height++;
+                        //Checkbox tb = (Checkbox)saleComponent.lookup("#cbxSelectDiscount");
+                    }
+                } catch (IOException exception) {
+                    throw new RuntimeException(exception);
+                }
             }
-        }
+    //    }
     }
 
     private void updateselectedItemInDiscount(SelectedItemInDiscount selectedItemInDiscount) {
         if (selectedItemInDiscount.selected){
-            Discount dis = discounts.stream().filter(disc->disc.Name ==selectedItemInDiscount.discountName).collect(Collectors.toList()).get(0);
+            Discount dis = discounts.stream().filter(disc->disc.Name ==selectedItemInDiscount.discountName && selectedItemInDiscount.InstanceId == disc.Id).collect(Collectors.toList()).get(0);
 
             if (selectedItemInDiscount.operatorTypeOfSale == OperatorTypeOfSale.ONE_OF){
                 Offer slectedOffer =  dis.Offers.stream().filter(offer -> offer.ItemID == selectedItemInDiscount.itemID).collect(Collectors.toList()).get(0);
@@ -110,22 +112,38 @@ public class SaleController {
         }
     }
 
-    public void SetOneOf(int itemId,boolean selected) {
-        if (selected){
+    public void SetOneOf(SelectedItemInDiscount selectedItemInDiscount) {
+        if (selectedItemInDiscount.selected){
             for (DiscountComponent discountComponent: childs) {
-                if (discountComponent.item.serialNumber != itemId){
+                if (discountComponent.item.serialNumber != selectedItemInDiscount.itemID &&
+                        discountComponent.discount.Id == selectedItemInDiscount.InstanceId){
                     discountComponent.setSelectionAsDisabed();
                 }
             }
         }
         else{
             for (DiscountComponent discountComponent: childs) {
-                 discountComponent.setSelectionAsEnabled();
+                if (discountComponent.discount.Id == selectedItemInDiscount.InstanceId){
+                    discountComponent.setSelectionAsEnabled();
+                }
             }
         }
     }
 
     public void updateOrder(ActionEvent actionEvent) {
+        List<DiscountComponent> offers = childs.stream().filter(x -> x.cbxSelectDiscount.isSelected()).collect(Collectors.toList());
+        for(DiscountComponent o : offers){
+            int q = (int)o.discount.Offers.stream().filter(x -> x.ItemID == o.item.serialNumber).findFirst().get().Quantity;
+
+            Offer offerExists = selectedOffers.stream().filter(x -> x.ItemID == o.item.serialNumber).findFirst().orElse(null);
+            if(offerExists == null){
+                this.selectedOffers.add(new Offer(o.item.serialNumber, q, 0));
+            }
+            else{
+                offerExists.Quantity += q;
+            }
+        }
+
         refreshOrderCallback.accept(this.selectedOffers);
 
     }

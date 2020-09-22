@@ -37,7 +37,7 @@
                         <Insets bottom="15.0" left="50.0" right="50.0" />
                     </padding>
                 </Label>
-            <Button fx:id="showStatusButton11" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#placeOrder" prefHeight="47.0" prefWidth="143.0" text="Place order" textFill="#e8e4dc">
+            <Button fx:id="showStatusButton11" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#placeOrder" prefHeight="47.0" prefWidth="143.0" text="Place order" textFill="#190b62">
                <font>
                   <Font size="14.0" />
                </font>

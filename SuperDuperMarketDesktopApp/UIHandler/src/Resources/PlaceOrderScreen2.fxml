@@ -2,4 +2,4 @@
 
 <?import javafx.scene.control.Accordion?>
 
-<Accordion fx:id="accodionPane" prefHeight="330.0" prefWidth="445.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.ShowMarketsController" />
+<Accordion fx:id="accodionPane" prefHeight="660.0" prefWidth="445.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.ShowMarketsController" />

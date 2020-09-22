@@ -92,9 +92,12 @@ public class OrderManager {
                         OrderItem itemOnSale = itemsInSale.get(0);
                         double quantity = itemOnSale.quantityObject.integerQuantity > 0 ? itemOnSale.quantityObject.integerQuantity: itemOnSale.quantityObject.KGQuantity;
                         if (quantity >= discount.Quantity){
-                            Discount disc = CloneDiscount(discount);
-                            disc.numOfOffers = (int)(quantity/discount.Quantity);
-                            sales.add(disc);
+                            int numOfOffers = (int) (quantity / discount.Quantity);
+                            for (int i = 1; i <= numOfOffers; i++) {
+                                Discount disc = CloneDiscount(discount);
+                                disc.Id = i;
+                                sales.add(disc);
+                            }
                         }
 
                     }
