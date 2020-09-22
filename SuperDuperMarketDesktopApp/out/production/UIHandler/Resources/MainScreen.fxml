@@ -173,7 +173,7 @@
     </bottom>
     <center>
 
-        <SplitPane fx:id="mainTextWindow" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="380.0" prefWidth="430.0"  BorderPane.alignment="CENTER">
+        <SplitPane fx:id="mainTextWindow" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="380.0" prefWidth="430.0" style="-fx-background-color: #3B5998; -fx-background-radius: 10;" BorderPane.alignment="CENTER" GridPane.columnIndex="1"
                    AnchorPane.topAnchor="0" AnchorPane.rightAnchor="0"
                    AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0">
             <items>
