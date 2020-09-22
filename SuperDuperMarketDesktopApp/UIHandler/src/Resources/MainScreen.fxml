@@ -20,7 +20,8 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="ALWAYS" />
             </rowConstraints>
             <children>
-                <Label fx:id="sdmHeader" alignment="CENTER" contentDisplay="TEXT_ONLY" maxHeight="-Infinity" prefHeight="57.0" prefWidth="561.0" text="Super duper market" textAlignment="CENTER" textFill="#4c86c3e8" textOverrun="CENTER_ELLIPSIS" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="NEVER">
+                <Label fx:id="sdmHeader" alignment="CENTER" contentDisplay="TEXT_ONLY" maxHeight="-Infinity" prefHeight="57.0" prefWidth="561.0" text="Super duper market" textAlignment="CENTER" textFill="#e8e4dc"
+                       textOverrun="CENTER_ELLIPSIS" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="NEVER">
                     <font>
                         <Font size="41.0" />
                     </font>
