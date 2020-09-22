@@ -137,4 +137,8 @@ public class StoreHandler {
 
         itemToUpdate.price=itemPrice;
     }
+
+    public void addStore(SuperDuperMarket superDuperMarket, Store storeToAdd) {
+        superDuperMarket.Stores.add(storeToAdd);
+    }
 }

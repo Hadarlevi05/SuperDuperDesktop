@@ -12,6 +12,7 @@ public class Store {
     private OrderManager orderManager;
     private LocationHandler  locationHandler;
 
+
     public Store(int serialNumber, String name, int PPK, SDMLocation location){
         this.serialNumber = serialNumber;
         this.name = name;
