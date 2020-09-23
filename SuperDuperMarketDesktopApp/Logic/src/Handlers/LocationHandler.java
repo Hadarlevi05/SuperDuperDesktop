@@ -3,8 +3,14 @@ package Handlers;
 import Models.Customer;
 import Models.SDMLocation;
 import Models.Store;
+import Models.SuperDuperMarket;
+import generatedClasses.Location;
+import generatedClasses.SDMCustomer;
+import generatedClasses.SDMStore;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static java.lang.Math.sqrt;
 
@@ -42,5 +48,23 @@ public class LocationHandler {
             maxY = Math.max(maxY, customer.location.y);
         }
         return maxY;
+    }
+
+    public SDMLocation getLocationByXandY(SuperDuperMarket sdm, int x, int y) {
+
+        for (Store store : sdm.Stores) {
+            SDMLocation loc = store.Location;
+            if (y == loc.y && x == loc.x) {
+                return loc;
+            }
+        }
+
+        for (Customer customer : sdm.Customers) {
+            SDMLocation loc = customer.location;
+            if (y == loc.y && x == loc.x) {
+                return loc;
+            }
+        }
+        return null;
     }
 }

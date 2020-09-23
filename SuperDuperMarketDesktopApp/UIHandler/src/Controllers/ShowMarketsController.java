@@ -11,6 +11,8 @@ import UIUtils.StoreItemTable;
 
 import UIUtils.StoreItemTableOfStaticOrder;
 import generatedClasses.Location;
+import javafx.beans.binding.Bindings;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -42,20 +44,15 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class ShowMarketsController {
+    private static final int LIST_CELL_HEIGHT = 400;
     @FXML
     private Accordion accodionPane;
     private SuperDuperHandler superDuperHandler = new SuperDuperHandler();
     private ItemHandler itemHandler = new ItemHandler();
     private StoreHandler storeHandler = new StoreHandler();
+    LocationHandler locationHandler = new LocationHandler();
 
     void showMarkets(SuperDuperMarket superDuperMarket, Pane textPane) {
-
-
-/*        TitledPane changedFilesTitledPane = new TitledPane();
-        ListView<String> changedFilesListView = new ListView<>();
-        TitledPane deletedFilesTitledPane = new TitledPane();
-        ListView<String> deletedFilesListView = new ListView<>();*/
-
 
         FXMLLoader fxmlLoader = new FXMLLoader();
         URL url = getClass().getResource("/Resources/ShowMarketsScreen.fxml");
@@ -63,6 +60,7 @@ public class ShowMarketsController {
 
         List<Store> stores = superDuperMarket.Stores;
         try {
+
             accodionPane = fxmlLoader.load(url.openStream());
 
             for (int i = 0; i < superDuperMarket.Stores.toArray().length; i++) {
@@ -96,10 +94,22 @@ public class ShowMarketsController {
                 }
                 GetStoreDetails(superDuperMarket, storeDetails, store);
 
+
                 listView.setItems(storeDetails);
+                listView.setMinHeight(150);
+                tableView.setMinHeight(150);
+
+                //listView.prefHeightProperty().bind(Bindings.size(storeDetails).multiply(LIST_CELL_HEIGHT));
+                tableView.setPrefWidth(450);
+
+                //tableView.prefHeightProperty().bind(Bindings.size(storeDetails).multiply(LIST_CELL_HEIGHT));
+                tableView.setMaxHeight(Double.MAX_VALUE);
+                listView.setMaxHeight(Double.MAX_VALUE);
+
 
                 grid.add(listView, 0, 0);
-                grid.add(tableView, 0, 1);
+                grid.add(new Label("Items:"), 0, 1);
+                grid.add(tableView, 0, 2);
 
 
                 Button newButton = new Button();
@@ -121,10 +131,13 @@ public class ShowMarketsController {
                         }
                     }
                 });
-                grid.setHgap(20); //horizontal gap in pixels 
-                grid.setVgap(20);
+                grid.setHgap(10); //horizontal gap in pixels => that's what you are asking for
+                grid.setVgap(10); //vertical gap in pixels
+                grid.setPadding(new Insets(10, 10, 10, 10));
+                //grid.setHgap(10); //horizontal gap in pixels
+                //grid.setVgap(10);
                 newButton.setPadding(new Insets(3, 3, 0, 3));
-                grid.add(newButton, 0, 2);
+                grid.add(newButton, 0, 3);
 
                 Button deleteButton = new Button();
                 deleteButton.setText("Delete Item");
@@ -139,7 +152,7 @@ public class ShowMarketsController {
 
 
                 deleteButton.setPadding(new Insets(3, 3, 3, 3));
-                grid.add(deleteButton, 0, 3);
+                grid.add(deleteButton, 0, 4);
 
 
                 tableView.setOnMouseClicked(new EventHandler() {
@@ -166,10 +179,16 @@ public class ShowMarketsController {
                 });
 
 
-                titledPane.setContent(grid);
+                ScrollPane sp = new ScrollPane(grid);
+                sp.setFitToWidth(true);
+                sp.setFitToHeight(true);
+
+                titledPane.setContent(sp);
                 titledPane.setText(String.format("Store number %d", i + 1));
                 titledPane.setStyle("-fx-text-fill: #052f59; -fx-font-weight: bold;");
                 accodionPane.getPanes().addAll(titledPane);
+
+
             }
             TitledPane addStoretitledPane = getTitledPaneForAddStore(superDuperMarket, textPane);
             accodionPane.getPanes().add(addStoretitledPane);
@@ -191,7 +210,9 @@ public class ShowMarketsController {
         final String[] storeName = new String[1];
 
         GridPane grid = new GridPane();
-        grid.setVgap(7);
+        grid.setPadding(new Insets(10, 10, 10, 10));
+        grid.setVgap(10);
+        grid.setHgap(10);
 
         Button addButton = new Button("Add");
         grid.setPadding(new Insets(5, 5, 5, 5));
@@ -200,6 +221,7 @@ public class ShowMarketsController {
         Label errorlabelId = new Label("Valid");
         Label errorlabelx = new Label("Valid");
         Label errorlabely = new Label("Valid");
+        Label errorlabel = new Label("Valid");
 
         Font font = Font.font("castellar", 16);
         errorlabelId.setFont(font);
@@ -229,6 +251,12 @@ public class ShowMarketsController {
                 storeName[0] = textFieldNameStore.getText();
             }
         });
+        textFieldNameStore.setOnKeyReleased(new EventHandler<Event>() {
+            @Override
+            public void handle(Event event) {
+                storeName[0] = textFieldNameStore.getText();
+            }
+        });
         grid.add(textFieldNameStore, 1, 1);
         grid.add(new Label("Location: "), 0, 2);
         grid.add(new Label("X: "), 0, 3);
@@ -236,7 +264,7 @@ public class ShowMarketsController {
 
         grid.add(TextFieldX, 1, 3);
         grid.add(new Label("Y: "), 0, 4);
-        grid.add(addButton, 0, 6);
+        grid.add(addButton, 0, 8);
 
         TextFieldX.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -256,7 +284,15 @@ public class ShowMarketsController {
         TextFieldX.setOnKeyReleased(new EventHandler() {
             @Override
             public void handle(Event event) {
-                int loc = Integer.parseInt(TextFieldX.getText());
+                int loc = 0;
+                try {
+                    loc = Integer.parseInt(TextFieldX.getText());
+                } catch (Exception e) {
+                    errorlabelx.setText("Invalid X");
+                    errorlabelx.setStyle("-fx-text-fill:red");
+                    errorlabelx.setFont(font);
+                    return;
+                }
                 if (loc >= 1 && loc <= 50) {
                     errorlabelx.setStyle("-fx-text-fill:green");
                     errorlabelx.setText("Valid");
@@ -279,6 +315,13 @@ public class ShowMarketsController {
                 PPK[0] = Integer.parseInt(textFieldNameStore.getText());
             }
         });
+        TextFieldPPK.setOnKeyReleased(new EventHandler<Event>() {
+            @Override
+            public void handle(Event event) {
+                PPK[0] = Integer.parseInt(TextFieldPPK.getText());
+            }
+        });
+
         grid.add(TextFieldPPK, 1, 5);
         TextFieldY.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -299,13 +342,21 @@ public class ShowMarketsController {
         TextFieldY.setOnKeyReleased(new EventHandler() {
             @Override
             public void handle(Event event) {
-                int loc = Integer.parseInt(TextFieldX.getText());
+                int loc = 0;
+                try {
+                    loc = Integer.parseInt(TextFieldY.getText());
+                } catch (Exception e) {
+                    errorlabely.setText("Invalid Y");
+                    errorlabely.setStyle("-fx-text-fill:red");
+                    errorlabely.setFont(font);
+                    return;
+                }
                 if (loc >= 1 && loc <= 50) {
                     errorlabely.setStyle("-fx-text-fill:green");
                     errorlabely.setText("Valid");
                     storeLoc.y = loc;
                 } else {
-                    errorlabely.setText("Invalid X");
+                    errorlabely.setText("Invalid Y");
                     errorlabely.setStyle("-fx-text-fill:red");
                     errorlabely.setFont(font);
                 }
@@ -321,19 +372,79 @@ public class ShowMarketsController {
                 int t = 9;
             }
         });
+        List<StoreItemTable> StoreItemTable = new ArrayList<>();
+        ListView<StoreItemTable> listView = new ListView<StoreItemTable>();
+        ObservableList<StoreItemTable> list = FXCollections.observableArrayList();
+        listView.setItems(list);
+        ListView<StoreItemTable> selected = new ListView<>();
+        listView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        listView.addEventFilter(MouseEvent.MOUSE_PRESSED, evt -> {
+            Node node = evt.getPickResult().getIntersectedNode();
+            // go up from the target node until a list cell is found or it's clear
+            // it was not a cell that was clicked
+            while (node != null && node != listView && !(node instanceof ListCell)) {
+                node = node.getParent();
+            }
 
+            // if is part of a cell or the cell,
+            // handle event instead of using standard handling
+            if (node instanceof ListCell) {
+                // prevent further handling
+                evt.consume();
+
+                ListCell cell = (ListCell) node;
+                ListView lv = cell.getListView();
+
+                // focus the listview
+                lv.requestFocus();
+
+                if (!cell.isEmpty()) {
+                    // handle selection for non-empty cells
+                    int index = cell.getIndex();
+                    if (cell.isSelected()) {
+                        lv.getSelectionModel().clearSelection(index);
+                    } else {
+                        lv.getSelectionModel().select(index);
+                    }
+                }
+            }
+        });
         addButton.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
             public void handle(ActionEvent event) {
-                Store storeToAdd = new Store(storeID[0], storeName[0], PPK[0], storeLoc);
-                storeHandler.addStore(superDuperMarket, storeToAdd);
-                showMarkets(superDuperMarket, textPane);
+                if (errorlabelx.getText() == "Valid" && errorlabely.getText() == "Valid" && errorlabelId.getText() == "Valid") {
+                    List<StoreItemTable> itemsTable = listView.getSelectionModel().getSelectedItems();
+                    if (itemsTable == null || itemsTable.size() == 0) {
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION, "The store must sell at least one item\n" +
+                                "Please select an item", ButtonType.OK);
+                        alert.showAndWait();
+                        return;
+                    }
+                    SDMLocation existLoc = locationHandler.getLocationByXandY(superDuperMarket, storeLoc.x, storeLoc.y);
+                    if (existLoc != null) {
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION, "The location of the store you entered is already taken\n" +
+                                "Please enter another location", ButtonType.OK);
+                        alert.showAndWait();
+                        return;
+                    }
+                    grid.getChildren().removeIf(node -> GridPane.getRowIndex(node) == 8 && GridPane.getColumnIndex(node) == 1);
+                    Store storeToAdd = new Store(storeID[0], storeName[0], PPK[0], storeLoc);
+
+                    List<OrderItem> items = converStoreItemTableToOrderItem(itemsTable, storeToAdd.serialNumber);
+                    storeToAdd.Inventory = items;
+                    storeHandler.addStore(superDuperMarket, storeToAdd);
+                    showMarkets(superDuperMarket, textPane);
+                } else {
+                    errorlabel.setText("Please fix invalid fields");
+                    errorlabel.setStyle("-fx-text-fill:red");
+                    errorlabel.setFont(font);
+                    grid.add(errorlabel, 1, 8);
+                }
             }
         });
-        List<StoreItemTable> StoreItemTable = new ArrayList<>();
-        ComboBox<StoreItemTable> itemsComboBox = new ComboBox<>();
-        for (Store store:superDuperMarket.Stores) {
+
+        for (Store store : superDuperMarket.Stores) {
             List<OrderItem> orderItems = store.Inventory;
 
 
@@ -341,22 +452,39 @@ public class ShowMarketsController {
                 OrderItem oi = orderItems.get(j);
                 Item item = superDuperHandler.getItemById(superDuperMarket, oi.itemId);
                 if (item != null) {
-                    StoreItemTable.add(new StoreItemTable(oi.price, item));
+                    list.add(new StoreItemTable(oi.price, item));
                 }
             }
         }
+        grid.add(new Label("Choose items that the store will sell:"), 0, 6);
 
-        itemsComboBox.getItems().addAll(StoreItemTable);
-        grid.add(itemsComboBox,0,6);
+        grid.add(listView, 0, 7);
+
         ScrollPane sp = new ScrollPane(grid);
         addStoretitledPane.setContent(sp);
 
         return addStoretitledPane;
     }
 
+    private List<OrderItem> converStoreItemTableToOrderItem(List<StoreItemTable> itemsTable, int storeID) {
+        List<OrderItem> items = new ArrayList<>();
+        for (StoreItemTable storeItemTable : itemsTable
+        ) {
+            items.add(new OrderItem(storeItemTable.serialNumber, storeItemTable.price, storeID));
+        }
+        return items;
+    }
 
     private int CheckIfStoreExist(SuperDuperMarket superDuperMarket, TextField textFieldID, Label error_label, Font font) {
-        int id = Integer.parseInt(textFieldID.getText());
+        int id = 0;
+        try {
+            id = Integer.parseInt(textFieldID.getText());
+        } catch (Exception e) {
+            error_label.setText("Invalid ID");
+            error_label.setStyle("-fx-text-fill:red");
+            error_label.setFont(font);
+            return 0;
+        }
         Store store = storeHandler.getStoreById(superDuperMarket, id);
         if (store == null) {
             error_label.setStyle("-fx-text-fill:green");
@@ -453,8 +581,8 @@ public class ShowMarketsController {
 
         tableView.getColumns().setAll(nameCol, serialCol, priceCol, purchaseTypeCol);
 
-        tableView.setPrefWidth(450);
-        tableView.setPrefHeight(400);
+/*        tableView.setPrefWidth(450);
+        tableView.setPrefHeight(400);*/
         tableView.autosize();
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 

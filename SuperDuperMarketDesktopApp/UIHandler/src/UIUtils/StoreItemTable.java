@@ -33,4 +33,10 @@ public class StoreItemTable{
     public Double getPrice() {
         return price;
     }
+
+
+    @Override
+    public String toString() {
+        return "ID: " + this.serialNumber+ ", Name: " + this.name;
+    }
 }
