@@ -16,7 +16,7 @@ import java.util.function.Consumer;
 public class DiscountComponent extends VBox {
 
     public Item item;
-    private Discount discount;
+    public Discount discount;
 
     private Consumer<SelectedItemInDiscount> selectOfferCallback;
 
@@ -25,7 +25,7 @@ public class DiscountComponent extends VBox {
     @FXML private Label lblItem;
     @FXML private Label lblQuantity;
     @FXML private VBox vboxOffers;
-    @FXML private CheckBox cbxSelectDiscount;
+    @FXML public CheckBox cbxSelectDiscount;
 
     private SuperDuperHandler superDuperHandler;
     private OperatorTypeOfSale operatorTypeOfSale;
@@ -51,12 +51,12 @@ public class DiscountComponent extends VBox {
         @Override public void changed(ObservableValue<? extends Boolean> ov, Boolean old_val, Boolean new_val) {
             if (new_val == true) {
 
-                SelectedItemInDiscount eventData = new SelectedItemInDiscount(item.serialNumber, operatorTypeOfSale, discount.Name, true);
+                SelectedItemInDiscount eventData = new SelectedItemInDiscount(discount.Id, item.serialNumber, operatorTypeOfSale, discount.Name, true);
 
                 selectOfferCallback.accept(eventData);
             }
             else{
-                SelectedItemInDiscount eventData = new SelectedItemInDiscount(item.serialNumber, operatorTypeOfSale,discount.Name, false);
+                SelectedItemInDiscount eventData = new SelectedItemInDiscount(discount.Id, item.serialNumber, operatorTypeOfSale,discount.Name, false);
 
                 selectOfferCallback.accept(eventData);
 

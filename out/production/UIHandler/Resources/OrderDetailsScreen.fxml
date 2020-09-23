@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="439.0" prefWidth="633.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.OrderDetailsController">
+   <children>
+       <ScrollPane fx:id="orderDetailsScroll" prefHeight="400.0" prefWidth="633.0">
+           <AnchorPane fx:id="orderDetailsPane" minHeight="0.0" minWidth="0.0" prefHeight="393.0" prefWidth="669.0">
+            <children>
+               <VBox fx:id="orderDetailsVbox" prefHeight="384.0" prefWidth="616.0" />
+            </children></AnchorPane>
+       </ScrollPane>
+      <Button fx:id="cancelButton" layoutX="212.0" layoutY="405.0" mnemonicParsing="false" text="Canel" />
+      <Button fx:id="continueButton" layoutX="271.0" layoutY="405.0" mnemonicParsing="false" text="Continue" />
+   </children>
+</AnchorPane>

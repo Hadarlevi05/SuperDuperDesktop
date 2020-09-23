@@ -1,0 +1,100 @@
+.root {
+    -fx-background-color: #9b56a7;
+    -fx-border-color:  #221F1F;
+    -fx-border-width: 5;
+}
+
+.button {
+    -fx-background-color: #c498cb;
+    -fx-border-color: #39303b;
+    -fx-border-radius: 5;
+    -fx-background-radius: 7;
+    -fx-text-fill: #4c484f;
+    -fx-font-size: 10px;
+    -fx-text-alignment: center;
+}
+
+.button:hover {
+    -fx-effect: dropshadow(three-pass-box, #bba8ec, 10, 0.3, 5, 3);
+}
+
+.button:pressed {
+    -fx-background-color: #c194ca;
+    -fx-effect: dropshadow(three-pass-box, #a888b3, 10, 0.3, 5, 3);
+    -fx-translate-y: 2px;
+}
+
+#sdmHeader{
+    -fx-text-fill: #c194ca;
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-effect: innershadow(three-pass-box, #b37bca, 5.13, 0.55, 0.0, 0.0);
+    -fx-text-alignment: center;
+}
+#CustomerComboBox{
+    -fx-text-fill: #c194ca;
+    -fx-font-size: 23px;
+    -fx-font-weight: bold;
+    -fx-effect: innershadow(three-pass-box, #b781c6, 5.13, 0.55, 0.0, 0.0);
+    -fx-text-alignment: center;}
+
+#magitBranchButtons {
+    -fx-text-fill: #b78cc3;
+    -fx-font-size: 10px;
+}
+
+#userName {
+    -fx-font-size: 10px;
+    -fx-font-family: "System";
+    -fx-text-fill: #ae7bbc;
+}
+
+#magitLargeHeader {
+    -fx-text-fill: #c194ca;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+#mainTextWindow{
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 10;
+}
+
+#textPane {
+    -fx-background-color: #eacbf5;
+    -fx-background-radius: 7;
+}
+.label {
+    -fx-text-fill: #c194ca;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
+#checkoutButton {
+    -fx-text-fill: #c194ca;
+    -fx-font-size: 11px;
+}
+
+#pinkButton {
+    -fx-font-size: 9px;
+}
+
+#blueButton {
+    -fx-font-size: 9px;
+}
+
+#greenButton {
+    -fx-font-size: 9px;
+}
+
+.split-pane {
+    -fx-background-color: #c194ca;
+    -fx-border-radius: 10;
+}
+.onSale-label {
+    -fx-text-fill: #c194ca;
+    -fx-font-weight: bold;
+    -fx-font-size: 10px;
+    -fx-background-color: #c98fde;
+
+}

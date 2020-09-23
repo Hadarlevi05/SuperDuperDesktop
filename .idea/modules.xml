@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/SuperDuperMarketDesktopApp/Logic/Logic.iml" filepath="$PROJECT_DIR$/SuperDuperMarketDesktopApp/Logic/Logic.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/SuperDuperDesktop.iml" filepath="$PROJECT_DIR$/.idea/SuperDuperDesktop.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SuperDuperMarketDesktopApp/UIHandler/UIHandler.iml" filepath="$PROJECT_DIR$/SuperDuperMarketDesktopApp/UIHandler/UIHandler.iml" />
+    </modules>
+  </component>
+</project>

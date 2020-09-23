@@ -17,7 +17,7 @@ public class Discount {
     public String Name;
     public int ItemID;
     public double Quantity;
-    public int numOfOffers;
+    public int Id;
     public OperatorTypeOfSale OperatorType;
     public List<Offer> Offers;
 

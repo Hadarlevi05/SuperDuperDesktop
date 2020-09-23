@@ -232,7 +232,7 @@ public class PlaceOrderController {
                                             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Resources/SaleScreen.fxml"));
                                             Scene scene = new Scene(fxmlLoader.load());
                                             Stage stage = new Stage();
-                                            stage.setTitle("Anchor Pane Example");
+                                            stage.setTitle("Orders");
                                             stage.setScene(scene);
                                             stage.show();
                                             SaleController saleController = fxmlLoader.getController();
@@ -320,18 +320,6 @@ public class PlaceOrderController {
 
         OrderDetailsController orderDetailsController = fxmlLoader.getController();
         orderDetailsController.showorderDetails(sdm, order, textPane);
-
-       /* FXMLLoader fxmlLoader = new FXMLLoader();
-
-        URL url = getClass().getResource("/Resources/OrderDetailsScreen.fxml");
-        fxmlLoader.setLocation(url);
-        try {
-            textPane = fxmlLoader.load(url.openStream());
-        }
-        catch (Exception e){
-
-        }*/
-
     }
 
     private void BuilDItemsTableOfStaticOrder(List<StoreItemTableOfStaticOrder> itemTable, int[] cumulativeHeight, Pane textPane) {
