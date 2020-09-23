@@ -2,8 +2,6 @@ package UIUtils;
 
 import Enums.PurchaseType;
 
-import java.text.DecimalFormat;
-
 public class OrderDetailsItem {
 
     public int itemID;
@@ -14,6 +12,7 @@ public class OrderDetailsItem {
     public double totalPricePerItem;
     public double totalPrice;
     public boolean participatesInSale;
+    public boolean boughtOnSale;
 
     //public double distanceFromTheStore;
     //public double pricePerKilometer;
@@ -37,11 +36,11 @@ public class OrderDetailsItem {
     public PurchaseType getPurchaseType() {
         return purchaseType;
     }
-/*    public double getPrice() {
-        return price;
-    }*/
     public double getQuantity() {
         return quantity;
+    }
+    public boolean getBoughtOnSale() {
+        return boughtOnSale;
     }
     public double getTotalPricePerItem() {
         return totalPricePerItem;
@@ -52,9 +51,7 @@ public class OrderDetailsItem {
     public boolean getParticipatesInSale() {
         return participatesInSale;
     }
-/*    public double getShippingCost() {
-        return shippingCost;
-    }*/
+
 
 
 }

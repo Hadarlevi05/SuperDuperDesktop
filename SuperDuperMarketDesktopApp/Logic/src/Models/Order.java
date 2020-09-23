@@ -7,8 +7,6 @@ import java.util.*;
 @XmlRootElement
 public class Order {
 
-
-
     public Order() {
         this.totalItemsNum = 0;
         this.numOfItemsTypes = 0;
@@ -16,6 +14,7 @@ public class Order {
         this.totalPrice=0;
         this.totalItemsPrice = 0;
         this.orderItems = new ArrayList<>();
+        this.orderItemsFromSales = new ArrayList<>();
         this.deliveryPriceByStore = new HashMap<>();
         this.storesID =  new ArrayList<>();
     }
@@ -41,6 +40,8 @@ public class Order {
     public double totalItemsPrice;
     @XmlElement
     public List<OrderItem> orderItems;
+    public List<OrderItem> orderItemsFromSales;
+
     @XmlElement
     public SDMLocation CustomerLocation;
 

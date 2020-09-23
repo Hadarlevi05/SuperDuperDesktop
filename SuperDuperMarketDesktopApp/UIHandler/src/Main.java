@@ -31,7 +31,7 @@ public class Main extends Application {
         mainController.setPrimaryStage(primaryStage);
         mainController.setScene(scene);
         primaryStage.show();
-
+        mainController.initialize(primaryStage);
         ChangeListener<Number> stageSizeListener = (observable, oldValue, newValue) ->{
             System.out.println("Height: " + primaryStage.getHeight() + " Width: " + primaryStage.getWidth());
             mainController.initialize(primaryStage);

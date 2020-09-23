@@ -52,6 +52,14 @@ public class PlaceOrderController {
 
     void placeOrder(SuperDuperMarket superDuperMarket, Pane textPane) {
         final int[] cumulativeHeight = {5};
+        GridPane grid = new GridPane();
+        ScrollPane scroll = new ScrollPane(textPane);
+        scroll.setFitToWidth(true);
+        scroll.setFitToHeight(true);
+
+        grid.setPadding(new Insets(10, 10, 10, 10));
+        grid.setVgap(10);
+        grid.setHgap(10);
 
         selectStore = new ComboBox<Store>();
         orderType = new ComboBox<OrderType>();
@@ -61,6 +69,11 @@ public class PlaceOrderController {
         selectStore.setPromptText("Select Store");
         CustomerComboBox.setPromptText("Select customer");
         selectStore.setPromptText("Select store");
+
+        grid.add(CustomerComboBox, 0, 1);
+        grid.add(purchaseDate, 0, 2);
+        grid.add(orderType, 0, 3);
+
         final Customer[] selectedCustomer = new Customer[1];
         final Date[] orderDate = new Date[1];
         final Store[] store = new Store[1];
@@ -78,9 +91,11 @@ public class PlaceOrderController {
             accodionPane = fxmlLoader.load(url.openStream());
             ObservableList<Customer> customerDetails = getCustomers(superDuperMarket);
             CustomerComboBox.setItems(customerDetails);
-            textPane.getChildren().clear();
-            textPane.getChildren().add(CustomerComboBox);
-            CustomerComboBox.setLayoutY(cumulativeHeight[0]);
+            //textPane.getChildren().clear();
+            //textPane.getChildren().add(CustomerComboBox);
+            //CustomerComboBox.setLayoutY(cumulativeHeight[0]);
+            scroll.setMinWidth(textPane.widthProperty().doubleValue());
+            scroll.setMinHeight(textPane.heightProperty().doubleValue());
 
             accodionPane.prefWidthProperty().bind(textPane.widthProperty());
             CustomerComboBox.setOnAction(new EventHandler() {
@@ -89,8 +104,8 @@ public class PlaceOrderController {
                     selectedCustomer[0] = CustomerComboBox.getValue();
                     purchaseDate.setDisable(false);
                     cumulativeHeight[0] += CustomerComboBox.getBoundsInLocal().getHeight() + 5;
-                    purchaseDate.setLayoutY(cumulativeHeight[0]);
-                    textPane.getChildren().add(purchaseDate);
+                    //purchaseDate.setLayoutY(cumulativeHeight[0]);
+                    //textPane.getChildren().add(purchaseDate);
 
                 }
             });
@@ -98,8 +113,8 @@ public class PlaceOrderController {
                 orderDate[0] = java.sql.Date.valueOf(purchaseDate.getValue());
                 orderType.setDisable(false);
                 cumulativeHeight[0] += purchaseDate.getBoundsInLocal().getHeight() + 5;
-                orderType.setLayoutY(cumulativeHeight[0]);
-                textPane.getChildren().add(orderType);
+                //orderType.setLayoutY(cumulativeHeight[0]);
+                //textPane.getChildren().add(orderType);
 
             });
             orderType.setPromptText("Select order type");
@@ -116,8 +131,9 @@ public class PlaceOrderController {
 
                     switch (orderTypeSelected) {
                         case STATIC:
-                            selectStore.setLayoutY(cumulativeHeight[0]);
-                            textPane.getChildren().add(selectStore);
+                            grid.add(selectStore, 0, 4);
+                            //selectStore.setLayoutY(cumulativeHeight[0]);
+                            //.getChildren().add(selectStore);
                             selectStore.setDisable(false);
                             ObservableList<Store> storeDetailsForOrder = FXCollections.observableArrayList();
                             for (Store store : superDuperMarket.Stores) {
@@ -135,15 +151,20 @@ public class PlaceOrderController {
                                     alert.showAndWait();
 
                                     List<StoreItemTableOfStaticOrder> itemTable = getItemsForStaticOrder(superDuperMarket, OrderType.STATIC);
-                                    BuilDItemsTableOfStaticOrder(itemTable, cumulativeHeight, textPane);
-                                    continueButton.setLayoutY(cumulativeHeight[0]);
-                                    cancelButton.setLayoutY(cumulativeHeight[0]);
+                                    StackPane stack_pane = BuilDItemsTableOfStaticOrder(itemTable, cumulativeHeight);
+                                    grid.add(itemsTableStaticOrder, 0, 5);
+
+                                    //continueButton.setLayoutY(cumulativeHeight[0]);
+                                    //cancelButton.setLayoutY(cumulativeHeight[0]);
                                     cumulativeHeight[0] += continueButton.getBoundsInLocal().getHeight() + 5;
 
-                                    textPane.getChildren().add(continueButton);
-                                    cancelButton.setLayoutX(100);
-                                    textPane.getChildren().add(cancelButton);
+                                    //textPane.getChildren().add(continueButton);
+                                    //cancelButton.setLayoutX(100);
+                                    //textPane.getChildren().add(cancelButton);
+                                    HBox hbox = new HBox();
+                                    hbox.getChildren().addAll(cancelButton, continueButton);
 
+                                    grid.add(hbox, 0, 6);
                                     itemsTableStaticOrder.setOnMouseClicked(new EventHandler() {
                                         @Override
                                         public void handle(Event event) {
@@ -179,15 +200,22 @@ public class PlaceOrderController {
                             break;
                         case DYNAMIC:
                             List<StoreItemTableOfDynamicOrder> itemTable = getItemsForDynamicOrder(superDuperMarket, OrderType.DYNAMIC);
-                            BuilDItemsTableOfDynamicOrder(itemTable, cumulativeHeight, textPane);
-                            continueButton.setLayoutY(cumulativeHeight[0]);
-                            cancelButton.setLayoutY(cumulativeHeight[0]);
+                            grid.add(orderType, 0, 5);
+
+                            StackPane stack_pane = BuilDItemsTableOfDynamicOrder(itemTable, cumulativeHeight);
+                            grid.add(itemsTableDynamicOrder, 0, 5);
+
+                            //continueButton.setLayoutY(cumulativeHeight[0]);
+                            //cancelButton.setLayoutY(cumulativeHeight[0]);
                             cumulativeHeight[0] += continueButton.getBoundsInLocal().getHeight() + 5;
 
-                            textPane.getChildren().add(continueButton);
-                            cancelButton.setLayoutX(100);
-                            textPane.getChildren().add(cancelButton);
 
+                            //textPane.getChildren().add(continueButton);
+                            //cancelButton.setLayoutX(100);
+                            //textPane.getChildren().add(cancelButton);
+                            HBox hbox = new HBox();
+                            hbox.getChildren().addAll(cancelButton, continueButton);
+                            grid.add(hbox, 0, 6);
 
                             itemsTableDynamicOrder.setOnMouseClicked(new EventHandler() {
                                 @Override
@@ -239,7 +267,7 @@ public class PlaceOrderController {
 
                                             saleController.setRefreshOrderCallback(selectedOffers -> {
                                                 stage.hide();
-                                                orderDetailsHandler.updateOrderWithDiscount(order, selectedOffers);
+                                                orderDetailsHandler.updateOrderWithDiscount(superDuperMarket,order, selectedOffers);
                                                 try {
                                                     displayOrderDetails(superDuperMarket, order, textPane);
                                                 } catch (IOException e) {
@@ -254,7 +282,8 @@ public class PlaceOrderController {
                                         }
 
                                     } else {
-                                        textPane.getChildren().clear();
+                                        grid.getChildren().removeAll();
+                                        //textPane.getChildren().clear();
                                         displayOrderDetails(superDuperMarket, order, textPane);
                                     }
                                 }
@@ -272,6 +301,10 @@ public class PlaceOrderController {
                     });
                 }
             });
+
+            scroll.setContent(grid);
+            textPane.getChildren().addAll(scroll);
+
 
         } catch (IOException ioException) {
             ioException.printStackTrace();
@@ -322,7 +355,7 @@ public class PlaceOrderController {
         orderDetailsController.showorderDetails(sdm, order, textPane);
     }
 
-    private void BuilDItemsTableOfStaticOrder(List<StoreItemTableOfStaticOrder> itemTable, int[] cumulativeHeight, Pane textPane) {
+    private StackPane BuilDItemsTableOfStaticOrder(List<StoreItemTableOfStaticOrder> itemTable, int[] cumulativeHeight) {
 
 
         ObservableList data = FXCollections.observableList(itemTable);
@@ -366,13 +399,14 @@ public class PlaceOrderController {
         vbox.getChildren().addAll(hb, itemsTableStaticOrder, actionStatus);
 
         StackPane stack_pane = new StackPane(vbox);
-        stack_pane.setLayoutY(cumulativeHeight[0]);
+        //stack_pane.setLayoutY(cumulativeHeight[0]);
 
         cumulativeHeight[0] += 225;//stack_pane.getBoundsInLocal().getHeight() + 5;
-        textPane.getChildren().add(stack_pane);
+        return stack_pane;
+        //textPane.getChildren().add(stack_pane);
     }
 
-    private void BuilDItemsTableOfDynamicOrder(List<StoreItemTableOfDynamicOrder> itemTable, int[] cumulativeHeight, Pane textPane) {
+    private StackPane BuilDItemsTableOfDynamicOrder(List<StoreItemTableOfDynamicOrder> itemTable, int[] cumulativeHeight) {
 
 
         ObservableList data = FXCollections.observableList(itemTable);
@@ -412,11 +446,11 @@ public class PlaceOrderController {
         vbox.getChildren().addAll(hb, itemsTableDynamicOrder, actionStatus);
 
         StackPane stack_pane = new StackPane(vbox);
-        stack_pane.setLayoutY(cumulativeHeight[0]);
+        //stack_pane.setLayoutY(cumulativeHeight[0]);
 
         cumulativeHeight[0] += 225;//stack_pane.getBoundsInLocal().getHeight() + 5;
-        textPane.getChildren().add(stack_pane);
+        //textPane.getChildren().add(stack_pane);
 
-
+        return stack_pane;
     }
 }

@@ -8,12 +8,9 @@ import UIUtils.OrderDetailsItem;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Accordion;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.VBox;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -51,28 +48,18 @@ public class OrderDetailsComponent {
         storeNameLbl.setText(store.name);
         storeNumLbl.setText(String.valueOf(store.serialNumber));
         for (OrderItem oi : order.orderItems) {
-            if (oi.storeId == storeID) {
-                Item item = superDuperHandler.getItemById(superDuperMarket, oi.itemId);
-                OrderDetailsItem orderDetailsItem = new OrderDetailsItem();
-                orderDetailsItem.itemID = item.serialNumber;
-                orderDetailsItem.name = item.name;
-                orderDetailsItem.purchaseType = item.purchaseType;
-                orderDetailsItem.totalPrice = oi.price;
+            OrderDetailsItem orderOtemDetails = getOrderDetailsOfOrderItem(superDuperMarket, storeID, orderItemTable, oi);
+            orderOtemDetails.boughtOnSale = false;
 
-                if (oi.quantityObject.KGQuantity > 0) {
-                    double quantiy = oi.quantityObject.KGQuantity;
-
-                    orderDetailsItem.quantity = quantiy;
-                    orderDetailsItem.totalPrice = quantiy * oi.price;
-                } else {
-                    int quantiy = oi.quantityObject.integerQuantity;
-                    orderDetailsItem.quantity = quantiy;
-                    orderDetailsItem.totalPrice = quantiy * oi.price;
-                }
-                orderItemTable.add(orderDetailsItem);
-            }
+            orderItemTable.add(orderOtemDetails);
         }
+        for (OrderItem oi : order.orderItemsFromSales) {
+            OrderDetailsItem orderOtemDetails = getOrderDetailsOfOrderItem(superDuperMarket, storeID, orderItemTable, oi);
+            orderOtemDetails.boughtOnSale = true;
 
+            orderItemTable.add(orderOtemDetails);
+
+        }
 
         ObservableList data = FXCollections.observableList(orderItemTable);
         itemsInOrderDetails.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("itemID"));
@@ -81,9 +68,33 @@ public class OrderDetailsComponent {
         itemsInOrderDetails.getColumns().get(3).setCellValueFactory(new PropertyValueFactory<>("quantity"));
         itemsInOrderDetails.getColumns().get(4).setCellValueFactory(new PropertyValueFactory<>("totalPricePerItem"));
         itemsInOrderDetails.getColumns().get(5).setCellValueFactory(new PropertyValueFactory<>("totalPrice"));
-        itemsInOrderDetails.getColumns().get(6).setCellValueFactory(new PropertyValueFactory<>("participatesInSale"));
+        itemsInOrderDetails.getColumns().get(6).setCellValueFactory(new PropertyValueFactory<>("boughtOnSale"));
 
 
         itemsInOrderDetails.setItems(data);
+    }
+
+    private OrderDetailsItem getOrderDetailsOfOrderItem(SuperDuperMarket superDuperMarket, int storeID, List<OrderDetailsItem> orderItemTable, OrderItem oi) {
+        OrderDetailsItem orderDetailsItem = new OrderDetailsItem();
+        if (oi.storeId == storeID) {
+            Item item = superDuperHandler.getItemById(superDuperMarket, oi.itemId);
+
+            orderDetailsItem.itemID = item.serialNumber;
+            orderDetailsItem.name = item.name;
+            orderDetailsItem.purchaseType = item.purchaseType;
+            orderDetailsItem.totalPrice = oi.price;
+
+            if (oi.quantityObject.KGQuantity > 0) {
+                double quantiy = oi.quantityObject.KGQuantity;
+
+                orderDetailsItem.quantity = quantiy;
+                orderDetailsItem.totalPrice = quantiy * oi.price;
+            } else {
+                int quantiy = oi.quantityObject.integerQuantity;
+                orderDetailsItem.quantity = quantiy;
+                orderDetailsItem.totalPrice = quantiy * oi.price;
+            }
+        }
+        return orderDetailsItem;
     }
 }

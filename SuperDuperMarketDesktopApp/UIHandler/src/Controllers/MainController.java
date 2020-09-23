@@ -95,7 +95,8 @@ public class MainController {
     private ColumnConstraints columnButton;
     @FXML
     private ColumnConstraints footerColumn;
-
+    @FXML
+    private ColumnConstraints footer2Column;
     //  =========================== Controllers ==================================
     private ShowMarketsController marketController = new ShowMarketsController();
     private ShowItemsController itemController = new ShowItemsController();
@@ -143,15 +144,15 @@ public class MainController {
     void changeStyleToBlue(ActionEvent event) {
         primaryStage.getScene().getStylesheets().clear();
         primaryStage.getScene().getStylesheets().add(getClass().getResource("/Css/Style1.css").toExternalForm());
-        if(canvas != null) {
-           //canvas..setBackground(Background.EMPTY);
+        if (canvas != null) {
+            //canvas..setBackground(Background.EMPTY);
             //style = "-fx-background-color: #3B5998";
-           canvas.setStyle(style);
-           scrollPane.setContent(canvas);
+            canvas.setStyle(style);
+            scrollPane.setContent(canvas);
             treeAnchorPane.getChildren().clear();
-          treeAnchorPane.getChildren().add(scrollPane);
+            treeAnchorPane.getChildren().add(scrollPane);
 
-          // primaryStage.getScene().getStylesheets().add(getClass().getResource("/Css/CommitNode.css").toExternalForm());
+            // primaryStage.getScene().getStylesheets().add(getClass().getResource("/Css/CommitNode.css").toExternalForm());
         }
 
         isBlueButtonPressed = true;
@@ -163,14 +164,14 @@ public class MainController {
     void changeStyleToGreen(ActionEvent event) {
         primaryStage.getScene().getStylesheets().clear();
         primaryStage.getScene().getStylesheets().add(getClass().getResource("/Css/Style2.css").toExternalForm());
-        if(canvas != null) {
-          // canvas.setBackground(Background.EMPTY);
-           //style = "-fx-background-color: #405d27";
-           canvas.setStyle(style);
+        if (canvas != null) {
+            // canvas.setBackground(Background.EMPTY);
+            //style = "-fx-background-color: #405d27";
+            canvas.setStyle(style);
             scrollPane.setContent(canvas);
-           treeAnchorPane.getChildren().clear();
-           treeAnchorPane.getChildren().add(scrollPane);
-           //primaryStage.getScene().getStylesheets().add(getClass().getResource("/Css/CommitNode2.css").toExternalForm());
+            treeAnchorPane.getChildren().clear();
+            treeAnchorPane.getChildren().add(scrollPane);
+            //primaryStage.getScene().getStylesheets().add(getClass().getResource("/Css/CommitNode2.css").toExternalForm());
         }
         isGreenButtonPressed = true;
         isBlueButtonPressed = false;
@@ -181,13 +182,13 @@ public class MainController {
     void changeStyleToPink(ActionEvent event) {
         primaryStage.getScene().getStylesheets().clear();
         primaryStage.getScene().getStylesheets().add(getClass().getResource("/Css/Style3.css").toExternalForm());
-        if(canvas != null) {
-          //style = "-fx-background-color: #622569";
+        if (canvas != null) {
+            //style = "-fx-background-color: #622569";
             canvas.setStyle(style);
             scrollPane.setContent(canvas);
             treeAnchorPane.getChildren().clear();
             treeAnchorPane.getChildren().add(scrollPane);
-           // primaryStage.getScene().getStylesheets().add(getClass().getResource("/Css/CommitNode3.css").toExternalForm());
+            // primaryStage.getScene().getStylesheets().add(getClass().getResource("/Css/CommitNode3.css").toExternalForm());
         }
 
         isPinkButtonPressed = true;
@@ -209,9 +210,15 @@ public class MainController {
         //GridPane grid = new GridPane();
         /* your code */
         //ColumnConstraints column1 = new ColumnConstraints();
+        scrollPane.setFitToHeight(true);
+        scrollPane.setFitToWidth(true);
+
         columnButton.setPercentWidth(20);
         columnHeader.setPercentWidth(80);
-        footerColumn.setPercentWidth(100);
+        //footerColumn.setPercentWidth(100);
+        footerColumn.setPercentWidth(20);
+        footer2Column.setPercentWidth(80);
+
         setPrimaryStage(primaryStage);
         if (mapIsShow) {
             mapController.refresh(textPane);
@@ -222,10 +229,8 @@ public class MainController {
         columnHeader.setPercentWidth(20);
 
         gridHeader.getColumnConstraints().addAll(columnButton,columnHeader);*/
-        layoutHbox.setVisible(false);
+        //layoutHbox.setVisible(false);
     }
-
-
 
 
     private void setRepoActionsAvailable() {

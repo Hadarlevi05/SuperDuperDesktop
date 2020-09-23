@@ -42,7 +42,7 @@ public class DiscountComponent extends VBox {
 
         lblPrice.setText(Double.toString(offer.ForAdditional) + " ₪");
         lblSale.setText(item.name);
-        lblQuantity.setText(Integer.toString((int) offer.Quantity));
+        lblQuantity.setText(Integer.toString((int) offer.Quantity)+"X");
         cbxSelectDiscount.selectedProperty().addListener(checkboxChange);
     }
 
