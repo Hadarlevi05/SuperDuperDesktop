@@ -56,7 +56,7 @@
             </GridPane>
             <TableView fx:id="itemsInOrderDetails" prefHeight="200.0" prefWidth="200.0">
               <columns>
-                <TableColumn prefWidth="54.0" text="Item ID"/>
+                <TableColumn prefWidth="54.0" text="Item ID" />
                 <TableColumn prefWidth="78.0" text="Item Name" />
                   <TableColumn prefWidth="93.0" text="Purchase Type" />
                   <TableColumn prefWidth="64.0" text="Quantity" />

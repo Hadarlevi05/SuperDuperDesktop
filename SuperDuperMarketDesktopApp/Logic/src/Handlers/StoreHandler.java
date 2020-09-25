@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 public class StoreHandler {
 
+    public  int _dicountID = 1;
 
     public StoreHandler() {
 
@@ -95,6 +96,11 @@ public class StoreHandler {
                 totalAmountOfItems+= oi.quantityObject.integerQuantity >0? oi.quantityObject.integerQuantity : oi.quantityObject.KGQuantity;
             }
         }
+        for (OrderItem oi: order.orderItemsFromSales) {
+            if (oi.storeId == store.serialNumber){
+                totalAmountOfItems+= oi.quantityObject.integerQuantity >0? oi.quantityObject.integerQuantity : oi.quantityObject.KGQuantity;
+            }
+        }
         return totalAmountOfItems;
     }
 
@@ -107,6 +113,12 @@ public class StoreHandler {
             if (oi.storeId == store.serialNumber){
                 double quantity = oi.quantityObject.integerQuantity > 0 ? oi.quantityObject.integerQuantity : oi.quantityObject.KGQuantity;
                 totalCost += oi.price * quantity;
+            }
+        }
+        for (OrderItem oi: order.orderItemsFromSales) {
+            if (oi.storeId == store.serialNumber){
+                double quantity = oi.quantityObject.integerQuantity > 0 ? oi.quantityObject.integerQuantity : oi.quantityObject.KGQuantity;
+                totalCost += oi.price;
             }
         }
         return totalCost;
@@ -141,4 +153,5 @@ public class StoreHandler {
     public void addStore(SuperDuperMarket superDuperMarket, Store storeToAdd) {
         superDuperMarket.Stores.add(storeToAdd);
     }
+
 }

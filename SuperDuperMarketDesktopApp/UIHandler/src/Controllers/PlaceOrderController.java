@@ -30,6 +30,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.*;
 
 public class PlaceOrderController {
@@ -84,6 +85,15 @@ public class PlaceOrderController {
         selectStore.setDisable(true);
         continueButton.setDisable(true);
 
+        purchaseDate.setDayCellFactory(picker -> new DateCell() {
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                LocalDate today = LocalDate.now();
+
+                setDisable(empty || date.compareTo(today) < 0 );
+            }
+        });
+
         FXMLLoader fxmlLoader = new FXMLLoader();
         URL url = getClass().getResource("/Resources/PlaceOrderScreen2.fxml");
         fxmlLoader.setLocation(url);
@@ -103,16 +113,17 @@ public class PlaceOrderController {
                 public void handle(Event event) {
                     selectedCustomer[0] = CustomerComboBox.getValue();
                     purchaseDate.setDisable(false);
-                    cumulativeHeight[0] += CustomerComboBox.getBoundsInLocal().getHeight() + 5;
                     //purchaseDate.setLayoutY(cumulativeHeight[0]);
                     //textPane.getChildren().add(purchaseDate);
+                    CustomerComboBox.setDisable(true);
 
                 }
             });
             purchaseDate.setOnAction(event -> {
                 orderDate[0] = java.sql.Date.valueOf(purchaseDate.getValue());
                 orderType.setDisable(false);
-                cumulativeHeight[0] += purchaseDate.getBoundsInLocal().getHeight() + 5;
+                purchaseDate.setDisable(true);
+
                 //orderType.setLayoutY(cumulativeHeight[0]);
                 //textPane.getChildren().add(orderType);
 
@@ -128,12 +139,10 @@ public class PlaceOrderController {
                     OrderType orderTypeSelected = PlaceOrderController.this.orderType.getValue();
                     cumulativeHeight[0] += orderType.getBoundsInLocal().getHeight() + 5;
                     continueButton.setDisable(false);
-
+                    orderType.setDisable(true);
                     switch (orderTypeSelected) {
                         case STATIC:
                             grid.add(selectStore, 0, 4);
-                            //selectStore.setLayoutY(cumulativeHeight[0]);
-                            //.getChildren().add(selectStore);
                             selectStore.setDisable(false);
                             ObservableList<Store> storeDetailsForOrder = FXCollections.observableArrayList();
                             for (Store store : superDuperMarket.Stores) {
@@ -145,7 +154,7 @@ public class PlaceOrderController {
 
                                 @Override
                                 public void handle(Event event) {
-
+                                    selectStore.setDisable(true);
                                     store[0] = selectStore.getValue();
                                     Alert alert = new Alert(Alert.AlertType.INFORMATION, "Shipping cost from the store you selected:" + store[0].PPK, ButtonType.OK);
                                     alert.showAndWait();
@@ -154,13 +163,8 @@ public class PlaceOrderController {
                                     StackPane stack_pane = BuilDItemsTableOfStaticOrder(itemTable, cumulativeHeight);
                                     grid.add(itemsTableStaticOrder, 0, 5);
 
-                                    //continueButton.setLayoutY(cumulativeHeight[0]);
-                                    //cancelButton.setLayoutY(cumulativeHeight[0]);
                                     cumulativeHeight[0] += continueButton.getBoundsInLocal().getHeight() + 5;
 
-                                    //textPane.getChildren().add(continueButton);
-                                    //cancelButton.setLayoutX(100);
-                                    //textPane.getChildren().add(cancelButton);
                                     HBox hbox = new HBox();
                                     hbox.getChildren().addAll(cancelButton, continueButton);
 
@@ -188,7 +192,7 @@ public class PlaceOrderController {
                                                         } else {
                                                             qo = new QuantityObject(0, parsedQuantity);
                                                         }
-                                                        orderDetailsHandler.updateOrderDetails(superDuperMarket, order, oi, store[0], selectedCustomer[0].location, orderDate[0], qo);
+                                                        orderDetailsHandler.updateOrderDetails(superDuperMarket,selectedCustomer[0] ,order, oi, store[0], selectedCustomer[0].location, orderDate[0], qo);
                                                     }
                                                 }
                                             }
@@ -200,19 +204,14 @@ public class PlaceOrderController {
                             break;
                         case DYNAMIC:
                             List<StoreItemTableOfDynamicOrder> itemTable = getItemsForDynamicOrder(superDuperMarket, OrderType.DYNAMIC);
-                            grid.add(orderType, 0, 5);
 
                             StackPane stack_pane = BuilDItemsTableOfDynamicOrder(itemTable, cumulativeHeight);
-                            grid.add(itemsTableDynamicOrder, 0, 5);
+                            grid.add(new Label(), 0, 4);
 
-                            //continueButton.setLayoutY(cumulativeHeight[0]);
-                            //cancelButton.setLayoutY(cumulativeHeight[0]);
+                            grid.add(itemsTableDynamicOrder, 0, 5);
                             cumulativeHeight[0] += continueButton.getBoundsInLocal().getHeight() + 5;
 
 
-                            //textPane.getChildren().add(continueButton);
-                            //cancelButton.setLayoutX(100);
-                            //textPane.getChildren().add(cancelButton);
                             HBox hbox = new HBox();
                             hbox.getChildren().addAll(cancelButton, continueButton);
                             grid.add(hbox, 0, 6);
@@ -237,7 +236,7 @@ public class PlaceOrderController {
                                             } else {
                                                 qo = new QuantityObject(0, parsedQuantity);
                                             }
-                                            orderDetailsHandler.updateOrderDetails(superDuperMarket, order, oi, store, selectedCustomer[0].location, orderDate[0], qo);
+                                            orderDetailsHandler.updateOrderDetails(superDuperMarket, selectedCustomer[0], order, oi, store, selectedCustomer[0].location, orderDate[0], qo);
                                         }
                                     }
 
@@ -267,7 +266,7 @@ public class PlaceOrderController {
 
                                             saleController.setRefreshOrderCallback(selectedOffers -> {
                                                 stage.hide();
-                                                orderDetailsHandler.updateOrderWithDiscount(superDuperMarket,order, selectedOffers);
+                                                orderDetailsHandler.updateOrderWithDiscount(superDuperMarket, order, selectedOffers);
                                                 try {
                                                     displayOrderDetails(superDuperMarket, order, textPane);
                                                 } catch (IOException e) {

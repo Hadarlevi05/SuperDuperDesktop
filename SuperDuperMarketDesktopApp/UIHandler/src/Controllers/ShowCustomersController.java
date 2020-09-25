@@ -1,5 +1,6 @@
 package Controllers;
 
+import Handlers.CustomerHandler;
 import Handlers.ItemHandler;
 import Handlers.StoreHandler;
 import Handlers.SuperDuperHandler;
@@ -26,6 +27,8 @@ public class ShowCustomersController {
     private SuperDuperHandler superDuperHandler = new SuperDuperHandler();
     private ItemHandler itemHandler = new ItemHandler();
     private StoreHandler storeHandler = new StoreHandler();
+    private CustomerHandler customerHandler = new CustomerHandler();
+
     void showCustomers(SuperDuperMarket superDuperMarket, Pane textPane) {
 
 
@@ -34,22 +37,30 @@ public class ShowCustomersController {
         fxmlLoader.setLocation(url);
         List<TitledPane> titledPaneCustomers = new ArrayList<>();
         try {
-            accodionPane =  fxmlLoader.load(url.openStream());
+            accodionPane = fxmlLoader.load(url.openStream());
 
-            List<Customer> customers = superDuperMarket.Customers;
-            for (int i = 0; i < customers.toArray().length; i++) {
-                ObservableList<Customer> newItems = FXCollections.observableArrayList();
+            List<String> customersDetails = new ArrayList<>();
+            int i = 1;
+            for (Customer cust : superDuperMarket.Customers) {
+
+                ObservableList<String> newItems = FXCollections.observableArrayList();
 
                 TitledPane newFilesTitledPane = new TitledPane();
-                ListView<Customer> newFilsListView = new ListView<>();
+                ListView<String> newFilsListView = new ListView<>();
+                // id ,name, location, num of orders, avargePrice of orders wuthout delicry, avg prive of delivery
 
-                Customer customer = customers.get(i);
+                newItems.add("ID: " + cust.serialNumber);
+                newItems.add("Name: " + cust.name);
+                newItems.add("Location: " + "[" + cust.location.x + "," + cust.location.y + "]");
+                newItems.add("Number of Orders: " + cust.OrderIDs.size());
+                newItems.add("Average price of ordered items: " + String.format("%.2f", customerHandler.calculateAvgOfOrderedItems(superDuperMarket, cust)));
+                newItems.add("Average price of deliveries: " + String.format("%.2f", customerHandler.calculateAvgOfdeliveries(superDuperMarket, cust)));
 
-                newItems.add(customer);
                 newFilsListView.setItems(newItems);
 
                 newFilesTitledPane.setContent(newFilsListView);
-                newFilesTitledPane.setText(String.format("Customer number %d", i + 1));
+                newFilesTitledPane.setText(String.format("Customer number %d", i));
+                i++;
                 newFilesTitledPane.setStyle("-fx-text-fill: #052f59; -fx-font-weight: bold;");
                 titledPaneCustomers.add(newFilesTitledPane);
             }
@@ -59,7 +70,7 @@ public class ShowCustomersController {
             textPane.getChildren().add(accodionPane);
             accodionPane.prefWidthProperty().bind(textPane.widthProperty());
 
-        } catch(IOException e) {
+        } catch (IOException e) {
             CommonUsed.showError(e.getMessage());
         }
     }

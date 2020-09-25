@@ -28,6 +28,7 @@ public class MapController {
 
     public MapController() {
         locationHandler = new LocationHandler();
+
     }
 
     public void ShowStoresAndOrdersOnMap(SuperDuperMarket superDuperMarket, Pane textPane) {
@@ -104,10 +105,10 @@ public class MapController {
         String mystring = new String((String) ((ImageView) event.getTarget()).getId());
         if (mystring.contains("Store")) {
             Store store = new StoreHandler().getStoreById(superDuperMarket, Integer.parseInt(mystring.substring(6)));
-            tp = new Tooltip("ID: " + store.serialNumber + "\n" + "Name: " + store.name);
+            tp = new Tooltip("ID: " + store.serialNumber + "\n" + "Name: " + store.name + "\n" + "ppk: " + store.PPK + "\n" + "Number of placed orders:" + store.OrderHistoryIDs.size());
         } else {
             Customer customer = new CustomerHandler().getCustomerByID(superDuperMarket, Integer.parseInt(mystring.substring(9)));
-            tp = new Tooltip("ID: " + customer.serialNumber + "\n" + "Name: " + customer.name);
+            tp = new Tooltip("ID: " + customer.serialNumber + "\n" + "Name: " + customer.name +"\n" + "Number of orders:" + customer.OrderIDs.size());
         }
         bindTooltip(iv, tp);
     }

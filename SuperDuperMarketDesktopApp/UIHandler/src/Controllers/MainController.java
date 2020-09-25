@@ -121,18 +121,31 @@ public class MainController {
     private boolean isGreenButtonPressed = false;
     private boolean isBlueButtonPressed = true;
     private boolean isPinkButtonPressed = false;
+    private boolean fileDataLoadedSuccecfully = false;
 
 
 //  ============================= Util Functions ===============================
 
     @FXML
     void showMarkets() {
-        marketController.showMarkets(superDuperMarket, textPane);
+        mapIsShow = false;
+        textPane.getChildren().clear();
+        if (!fileDataLoadedSuccecfully) {
+            CommonUsed.showError("No data in SUPER DUPER MARKET\n Please load XML");
+        }else {
+            marketController.showMarkets(superDuperMarket, textPane);
+        }
     }
 
     @FXML
     void showItems() {
-        itemController.showItems(superDuperMarket, textPane);
+        mapIsShow = false;
+        textPane.getChildren().clear();
+        if (!fileDataLoadedSuccecfully) {
+            CommonUsed.showError("No data in SUPER DUPER MARKET\n Please load XML");
+        }else{
+            itemController.showItems(superDuperMarket, textPane);
+        }
     }
 
     @FXML
@@ -252,14 +265,24 @@ public class MainController {
     void showMaps() {
         mapIsShow = true;
         textPane.getChildren().clear();
-        mapController.ShowStoresAndOrdersOnMap(superDuperMarket, textPane);
+        if (!fileDataLoadedSuccecfully) {
+            CommonUsed.showError("No data in SUPER DUPER MARKET\n Please load XML");
+        }
+        else{
+            mapController.ShowStoresAndOrdersOnMap(superDuperMarket, textPane);
+        }
     }
 
     @FXML
     void placeOrder() {
         mapIsShow = false;
         textPane.getChildren().clear();
-        placeOrderController.placeOrder(superDuperMarket, textPane);
+        if (!fileDataLoadedSuccecfully) {
+            CommonUsed.showError("No data in SUPER DUPER MARKET\n Please load XML");
+        }
+        else{
+            placeOrderController.placeOrder(superDuperMarket, textPane);
+        }
     }
 
     @FXML
@@ -286,6 +309,7 @@ public class MainController {
                 CommonUsed.showError(res.getErrorMSG());
             } else {
                 CommonUsed.showSuccess("File loaded to system succesfully!");
+                this.fileDataLoadedSuccecfully = true;
             }
         } catch (JAXBException e) {
             CommonUsed.showError(e.getMessage());
@@ -296,14 +320,23 @@ public class MainController {
     public void showOrderHistory(ActionEvent actionEvent) {
         mapIsShow = false;
         textPane.getChildren().clear();
-        orderHistoryController.showOrderHistory(superDuperMarket, textPane);
+        if (!fileDataLoadedSuccecfully) {
+            CommonUsed.showError("No data in SUPER DUPER MARKET\n Please load XML");
+        } else {
+            orderHistoryController.showOrderHistory(superDuperMarket, textPane);
+        }
     }
 
     @FXML
     public void showCustomers(ActionEvent actionEvent) {
         mapIsShow = false;
         textPane.getChildren().clear();
-        customersController.showCustomers(superDuperMarket, textPane);
+        if (!fileDataLoadedSuccecfully) {
+            CommonUsed.showError("No data in SUPER DUPER MARKET\n Please load XML");
+        }
+        else{
+            customersController.showCustomers(superDuperMarket, textPane);
+        }
     }
 
 }

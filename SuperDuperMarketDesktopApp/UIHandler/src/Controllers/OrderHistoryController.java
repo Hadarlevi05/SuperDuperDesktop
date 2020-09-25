@@ -42,18 +42,11 @@ public class OrderHistoryController {
 
     public void showOrderHistory(SuperDuperMarket superDuperMarket, Pane textPane) {
 
-        if (!(superDuperMarket.Orders.ordersMap.size() > 0)) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "No orders made in super duper market yet", ButtonType.OK);
-            alert.showAndWait();
-            return;
-
-        }
-
         FXMLLoader fxmlLoader = new FXMLLoader();
         URL url = getClass().getResource("/Resources/OrderHistoryScreen.fxml");
         fxmlLoader.setLocation(url);
         try {
-            accodionPane =  fxmlLoader.load(url.openStream());
+            accodionPane = fxmlLoader.load(url.openStream());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -62,7 +55,7 @@ public class OrderHistoryController {
 
         for (Order order : superDuperMarket.Orders.ordersMap.values()) {
 
-            ScrollPane scroll=new ScrollPane();
+            ScrollPane scroll = new ScrollPane();
             scroll.setFitToHeight(true);
             scroll.setFitToWidth(true);
             TitledPane titledPane = new TitledPane();
@@ -75,23 +68,30 @@ public class OrderHistoryController {
             List<TitledPane> titledStoresPanes = new ArrayList<>();
             for (int storeID : order.storesID) {
                 Store store = storeHandler.getStoreById(superDuperMarket, storeID);
-
+                VBox orderVbox = new VBox();
                 Node node = null;
                 FXMLLoader fxmlLoader2 = new FXMLLoader(getClass().getResource("/Resources/OrderDetailsPerStore.fxml"));
                 try {
                     //orderHistoryVbox.getChildren().add(fxmlLoader2.load());
                     node = fxmlLoader2.load();
+                    orderVbox.getChildren().add(node);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
                 OrderDetailsComponent orderDetailsComponent = fxmlLoader2.getController();
                 orderDetailsComponent.SetOrderDetails(superDuperMarket, order, storeID);
                 childs.add(orderDetailsComponent);
-                ScrollPane scroll2=new ScrollPane();
+                ScrollPane scroll2 = new ScrollPane();
                 scroll2.setPrefHeight(accodionPane.getHeight());
                 scroll2.prefWidth(accodionPane.getWidth());
                 TitledPane newFilesTitledPane = new TitledPane();
-                scroll2.setContent(node);
+
+                Label totalItemsPrice = new Label("Total Price of items: " + String.format("%.2f", order.totalItemsPrice));
+                Label deliveryPrice = new Label("Total Delivery price: " + String.format("%.2f", order.deliveryPrice));
+                Label totalPrice = new Label("Total Price of order: " + String.format("%.2f", order.totalPrice));
+                orderVbox.getChildren().addAll(totalItemsPrice, deliveryPrice, totalPrice);
+
+                scroll2.setContent(orderVbox);
                 newFilesTitledPane.setContent(scroll2);
                 //newFilesTitledPane.setContent(orderHistoryVbox);
                 newFilesTitledPane.setText(store.name);
