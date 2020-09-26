@@ -9,6 +9,7 @@ import javafx.stage.Stage;
 
 import java.net.URL;
 
+
 public class Main extends Application {
 
     public static void main(String[] args) {
@@ -33,10 +34,7 @@ public class Main extends Application {
         primaryStage.show();
         mainController.initialize(primaryStage);
         ChangeListener<Number> stageSizeListener = (observable, oldValue, newValue) ->{
-            System.out.println("Height: " + primaryStage.getHeight() + " Width: " + primaryStage.getWidth());
             mainController.initialize(primaryStage);
-            //mainController.sdmHeader.
-            //grid.setAlignment(Pos.CENTER)
         };
 
 

@@ -48,17 +48,16 @@ public class OrderDetailsComponent {
         storeNameLbl.setText(store.name);
         storeNumLbl.setText(String.valueOf(store.serialNumber));
         for (OrderItem oi : order.orderItems) {
-            OrderDetailsItem orderOtemDetails = getOrderDetailsOfOrderItem(superDuperMarket, storeID, orderItemTable, oi);
-            orderOtemDetails.boughtOnSale = false;
-
-            orderItemTable.add(orderOtemDetails);
+            if (oi.storeId == store.serialNumber) {
+                OrderDetailsItem orderOtemDetails = getOrderDetailsOfOrderItem(superDuperMarket, storeID, orderItemTable, oi, false);
+                orderItemTable.add(orderOtemDetails);
+            }
         }
         for (OrderItem oi : order.orderItemsFromSales) {
-            OrderDetailsItem orderOtemDetails = getOrderDetailsOfOrderItem(superDuperMarket, storeID, orderItemTable, oi);
-            orderOtemDetails.boughtOnSale = true;
-
-            orderItemTable.add(orderOtemDetails);
-
+            if (oi.storeId == store.serialNumber) {
+                OrderDetailsItem orderOtemDetails = getOrderDetailsOfOrderItem(superDuperMarket, storeID, orderItemTable, oi, true);
+                orderItemTable.add(orderOtemDetails);
+            }
         }
 
         ObservableList data = FXCollections.observableList(orderItemTable);
@@ -74,8 +73,10 @@ public class OrderDetailsComponent {
         itemsInOrderDetails.setItems(data);
     }
 
-    private OrderDetailsItem getOrderDetailsOfOrderItem(SuperDuperMarket superDuperMarket, int storeID, List<OrderDetailsItem> orderItemTable, OrderItem oi) {
+    private OrderDetailsItem getOrderDetailsOfOrderItem(SuperDuperMarket superDuperMarket, int storeID, List<OrderDetailsItem> orderItemTable, OrderItem oi, Boolean boughtOnSale) {
+
         OrderDetailsItem orderDetailsItem = new OrderDetailsItem();
+        orderDetailsItem.boughtOnSale = boughtOnSale;
         if (oi.storeId == storeID) {
             Item item = superDuperHandler.getItemById(superDuperMarket, oi.itemId);
 
@@ -89,10 +90,22 @@ public class OrderDetailsComponent {
 
                 orderDetailsItem.quantity = quantiy;
                 orderDetailsItem.totalPrice = quantiy * oi.price;
+                if (!orderDetailsItem.boughtOnSale) {
+                    orderDetailsItem.totalPricePerItem = oi.price;
+                } else {
+                    double totalPricePerItem = orderDetailsItem.totalPrice / orderDetailsItem.quantity;
+                    orderDetailsItem.totalPricePerItem = Double.parseDouble((String.format("%.2f", totalPricePerItem)));
+                }
             } else {
                 int quantiy = oi.quantityObject.integerQuantity;
                 orderDetailsItem.quantity = quantiy;
-                orderDetailsItem.totalPrice = quantiy * oi.price;
+                if (!orderDetailsItem.boughtOnSale) {
+                    orderDetailsItem.totalPrice = quantiy * oi.price;
+                    orderDetailsItem.totalPricePerItem = oi.price;
+                } else {
+                    double totalPricePerItem = orderDetailsItem.totalPrice / orderDetailsItem.quantity;
+                    orderDetailsItem.totalPricePerItem = Double.parseDouble((String.format("%.2f", totalPricePerItem)));
+                }
             }
         }
         return orderDetailsItem;

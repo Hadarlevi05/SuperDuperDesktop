@@ -32,6 +32,11 @@ public class ItemHandler {
                     count += (orderItem.quantityObject.integerQuantity+ orderItem.quantityObject.KGQuantity);
                 }
             }
+            for (OrderItem orderItem:order.orderItemsFromSales) {
+                if (orderItem.itemId == itemId){
+                    count += (orderItem.quantityObject.integerQuantity+ orderItem.quantityObject.KGQuantity);
+                }
+            }
         }
         return  count;
     }

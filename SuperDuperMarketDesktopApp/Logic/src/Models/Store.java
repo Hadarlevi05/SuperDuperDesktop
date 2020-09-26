@@ -30,10 +30,6 @@ public class Store {
     public List<Integer> OrderHistoryIDs = new ArrayList<>();
     public List<Discount> Sales = new ArrayList<>();
 
-    public  void AddOrder(){
-
-    }
-
     public double CalculateTotalDeliveriesCost(SuperDuperMarket superDuperMarket) {
         double totalDeliveriesCost = 0;
         for (int orderId: OrderHistoryIDs) {

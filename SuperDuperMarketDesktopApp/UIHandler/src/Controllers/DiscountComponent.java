@@ -20,12 +20,18 @@ public class DiscountComponent extends VBox {
 
     private Consumer<SelectedItemInDiscount> selectOfferCallback;
 
-    @FXML private Label lblSale;
-    @FXML private Label lblPrice;
-    @FXML private Label lblItem;
-    @FXML private Label lblQuantity;
-    @FXML private VBox vboxOffers;
-    @FXML public CheckBox cbxSelectDiscount;
+    @FXML
+    private Label lblSale;
+    @FXML
+    private Label lblPrice;
+    @FXML
+    private Label lblItem;
+    @FXML
+    private Label lblQuantity;
+    @FXML
+    private VBox vboxOffers;
+    @FXML
+    public CheckBox cbxSelectDiscount;
 
     private SuperDuperHandler superDuperHandler;
     private OperatorTypeOfSale operatorTypeOfSale;
@@ -42,21 +48,21 @@ public class DiscountComponent extends VBox {
 
         lblPrice.setText(Double.toString(offer.ForAdditional) + " ₪");
         lblSale.setText(item.name);
-        lblQuantity.setText(Integer.toString((int) offer.Quantity)+"X");
+        lblQuantity.setText(Integer.toString((int) offer.Quantity) + "X");
         cbxSelectDiscount.selectedProperty().addListener(checkboxChange);
     }
 
     ChangeListener checkboxChange = new ChangeListener<Boolean>() {
 
-        @Override public void changed(ObservableValue<? extends Boolean> ov, Boolean old_val, Boolean new_val) {
+        @Override
+        public void changed(ObservableValue<? extends Boolean> ov, Boolean old_val, Boolean new_val) {
             if (new_val == true) {
 
                 SelectedItemInDiscount eventData = new SelectedItemInDiscount(discount.Id, item.serialNumber, operatorTypeOfSale, discount.Name, true);
 
                 selectOfferCallback.accept(eventData);
-            }
-            else{
-                SelectedItemInDiscount eventData = new SelectedItemInDiscount(discount.Id, item.serialNumber, operatorTypeOfSale,discount.Name, false);
+            } else {
+                SelectedItemInDiscount eventData = new SelectedItemInDiscount(discount.Id, item.serialNumber, operatorTypeOfSale, discount.Name, false);
 
                 selectOfferCallback.accept(eventData);
 
@@ -65,17 +71,22 @@ public class DiscountComponent extends VBox {
     };
 
     public void setSelectionAsChecked() {
+        cbxSelectDiscount.selectedProperty().removeListener(checkboxChange);
         cbxSelectDiscount.setSelected(true);
+        cbxSelectDiscount.selectedProperty().addListener(checkboxChange);
+
     }
+
     public void setSelectionAsUnChecked() {
         cbxSelectDiscount.setSelected(false);
     }
+
     public void setSelectionAsDisabed() {
         cbxSelectDiscount.setDisable(true);
     }
 
     public void setCheckboxSelectCallback(Consumer<SelectedItemInDiscount> callback) {
-        this.selectOfferCallback = callback ;
+        this.selectOfferCallback = callback;
     }
 
     public void setSelectionAsEnabled() {

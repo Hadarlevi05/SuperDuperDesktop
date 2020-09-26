@@ -24,6 +24,7 @@ public class ShowItemsController {
     private SuperDuperHandler superDuperHandler = new SuperDuperHandler();
     private ItemHandler itemHandler = new ItemHandler();
     private StoreHandler storeHandler = new StoreHandler();
+
     void showItems(SuperDuperMarket superDuperMarket, Pane textPane) {
 
 
@@ -33,7 +34,7 @@ public class ShowItemsController {
 
         List<Store> stores = superDuperMarket.Stores;
         try {
-            accodionPane =  fxmlLoader.load(url.openStream());
+            accodionPane = fxmlLoader.load(url.openStream());
 
             List<Item> items = superDuperMarket.Items;
             for (int i = 0; i < items.toArray().length; i++) {
@@ -48,10 +49,11 @@ public class ShowItemsController {
                         + "Name: " + item.name + "\n"
                         + "Purchase type: " + item.purchaseType.toString() + "\n"
                         + "Amount of stores selling this item: " + storeHandler.countSellingStores(superDuperMarket, item.serialNumber) + "\n"
-                        + "Average price: " + String.format("%.2f",storeHandler.countAveragePriceOfSellingStores(superDuperMarket, item.serialNumber)) + "\n"
-                        + "Amount of sold items: " + String.format("%.2f", itemHandler.CalculateSoldItemsAmount(superDuperMarket ,item.serialNumber)) + "\n");
+                        + "Average price: " + String.format("%.2f", storeHandler.countAveragePriceOfSellingStores(superDuperMarket, item.serialNumber)) + "\n"
+                        + "Amount of sold items: " + String.format("%.2f", itemHandler.CalculateSoldItemsAmount(superDuperMarket, item.serialNumber)) + "\n");
 
                 newFilsListView.setItems(newItems);
+                newFilsListView.setMinHeight(150);
 
                 newFilesTitledPane.setContent(newFilsListView);
                 newFilesTitledPane.setText(String.format("Item number %d", i + 1));
@@ -63,7 +65,7 @@ public class ShowItemsController {
             textPane.getChildren().add(accodionPane);
             accodionPane.prefWidthProperty().bind(textPane.widthProperty());
 
-        } catch(IOException e) {
+        } catch (IOException e) {
             CommonUsed.showError(e.getMessage());
         }
     }

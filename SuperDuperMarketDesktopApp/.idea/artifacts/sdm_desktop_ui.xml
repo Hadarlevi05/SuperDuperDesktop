@@ -1,0 +1,13 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="sdm-desktop-ui">
+    <output-path>$PROJECT_DIR$</output-path>
+    <root id="archive" name="sdm-desktop-ui.jar">
+      <element id="module-output" name="SuperDuperMarketDesktopApp" />
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/UIHandler/src/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="module-output" name="UIHandler" />
+      <element id="artifact" artifact-name="sdm-desktop-logic" />
+    </root>
+  </artifact>
+</component>

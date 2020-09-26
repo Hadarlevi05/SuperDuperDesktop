@@ -68,6 +68,7 @@ public class ShowMarketsController {
                 GridPane grid = new GridPane();
                 TableView<StoreItemTable> tableView = new TableView<StoreItemTable>();
                 ListView<String> listView = new ListView<>();
+                ListView<String> listViewOrders = new ListView<>();
 
                 ObservableList<String> storeDetails = FXCollections.observableArrayList();
 
@@ -94,6 +95,10 @@ public class ShowMarketsController {
                 }
                 GetStoreDetails(superDuperMarket, storeDetails, store);
 
+                listViewOrders.setItems(GetOrdersOfStore(superDuperMarket, store));
+                List<Integer> ordersIds = store.OrderHistoryIDs;
+
+                listViewOrders.setMinHeight(150);
 
                 listView.setItems(storeDetails);
                 listView.setMinHeight(150);
@@ -105,12 +110,16 @@ public class ShowMarketsController {
                 //tableView.prefHeightProperty().bind(Bindings.size(storeDetails).multiply(LIST_CELL_HEIGHT));
                 tableView.setMaxHeight(Double.MAX_VALUE);
                 listView.setMaxHeight(Double.MAX_VALUE);
+                listViewOrders.setMaxHeight(Double.MAX_VALUE);
 
 
                 grid.add(listView, 0, 0);
                 grid.add(new Label("Items:"), 0, 1);
                 grid.add(tableView, 0, 2);
-
+                if(ordersIds.size() > 0){
+                    grid.add(new Label("Orders:"), 0, 3);
+                    grid.add(listViewOrders, 0, 4);
+                }
 
                 Button newButton = new Button();
                 newButton.setText("Add New Item");
@@ -137,7 +146,7 @@ public class ShowMarketsController {
                 //grid.setHgap(10); //horizontal gap in pixels
                 //grid.setVgap(10);
                 newButton.setPadding(new Insets(3, 3, 0, 3));
-                grid.add(newButton, 0, 3);
+                grid.add(newButton, 0, 5);
 
                 Button deleteButton = new Button();
                 deleteButton.setText("Delete Item");
@@ -152,7 +161,7 @@ public class ShowMarketsController {
 
 
                 deleteButton.setPadding(new Insets(3, 3, 3, 3));
-                grid.add(deleteButton, 0, 4);
+                grid.add(deleteButton, 0, 6);
 
 
                 tableView.setOnMouseClicked(new EventHandler() {
@@ -200,6 +209,25 @@ public class ShowMarketsController {
         } catch (IOException e) {
             CommonUsed.showError(e.getMessage());
         }
+    }
+
+    private ObservableList<String> GetOrdersOfStore(SuperDuperMarket superDuperMarket, Store store) {
+        ObservableList<String> OrderDetails = FXCollections.observableArrayList();
+
+        List<Integer> ordersIds = store.OrderHistoryIDs;
+
+        if (ordersIds.size() > 0) {
+            for (int orderID : ordersIds) {
+                Order order = superDuperMarket.Orders.GetOrderByOrderID(superDuperMarket, orderID);
+                DateFormat dateFormat = new SimpleDateFormat("dd/mm-hh:mm ");
+                OrderDetails.add(String.format( "Date: " + dateFormat.format(order.purchaseDate)));
+                OrderDetails.add("Total amount of items: " +String.format("%.2f", storeHandler.countTotalItemsAmountOfStoreInOrder(order, store)));
+                OrderDetails.add("Toatal cost of items: " + String.format("%.2f", storeHandler.countTotalCostItemsOfStoreInOrder(order, store)));
+                OrderDetails.add("Delevery price: " + String.format("%.2f", storeHandler.countDeliveryPriceOfStoreInOrder(order, store)));
+                OrderDetails.add("Total price: " + String.format("%.2f", storeHandler.countTotalPriceOfStoreInOrder(order, store)));
+            }
+        }
+        return OrderDetails;
     }
 
     private TitledPane getTitledPaneForAddStore(SuperDuperMarket superDuperMarket, Pane textPane) {
@@ -542,21 +570,6 @@ public class ShowMarketsController {
     }
 
     private void GetStoreDetails(SuperDuperMarket superDuperMarket, ObservableList<String> storeDetails, Store store) {
-        List<Integer> ordersIds = store.OrderHistoryIDs;
-
-        if (ordersIds.size() > 0) {
-            storeDetails.add("Orders:");
-            for (int orderID : ordersIds) {
-                Order order = superDuperMarket.Orders.GetOrderByOrderID(superDuperMarket, orderID);
-                DateFormat dateFormat = new SimpleDateFormat("dd/mm-hh:mm");
-                storeDetails.add(String.format("%-25s  %-25s  %-25s  %-25s  %-25s", "Date:" +
-                        dateFormat.format(order.purchaseDate), "Total amount of items:" +
-                        String.format("%.2f", storeHandler.countTotalItemsAmountOfStoreInOrder(order, store)), "Toatal cost of items :" +
-                        String.format("%.2f", storeHandler.countTotalCostItemsOfStoreInOrder(order, store)), "Delevery price:" +
-                        String.format("%.2f", storeHandler.countDeliveryPriceOfStoreInOrder(order, store)), "Total price:" +
-                        String.format("%.2f", storeHandler.countTotalPriceOfStoreInOrder(order, store))));
-            }
-        }
         storeDetails.add(String.format("PPK: %d", store.PPK));
         double totalDeliveriesCost = storeHandler.getStoreById(superDuperMarket, store.serialNumber).CalculateTotalDeliveriesCost(superDuperMarket);
         storeDetails.add("Total cost of deliveries from store: " + String.format("%.2f", totalDeliveriesCost) + "\n");

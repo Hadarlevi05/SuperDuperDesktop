@@ -28,6 +28,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import javax.swing.text.LayoutQueue;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +56,11 @@ public class OrderDetailsController {
 
     public void showorderDetails(SuperDuperMarket superDuperMarket, Order order, Pane textPane) {
         orderDetailsScroll.setVvalue(1.0);
+        Label storeLabel = new Label("Stores: ");
+        storeLabel.setStyle(" -fx-text-Alignment: CENTER; -fx-font-size: 20 ;-fx-font-family:Tahoma;-fx-font-weight: bold ");
+        orderDetailsVbox.getChildren().add(storeLabel);
+        orderDetailsVbox.setPadding(new Insets(10, 10, 10, 10));
+        orderDetailsVbox.setSpacing(10);
 
         for (int storeID : order.storesID) {
 
@@ -85,7 +91,8 @@ public class OrderDetailsController {
                     public void handle(Event event) {
 
                         textPane.getChildren().clear();
-
+                        Stage stage = (Stage) continueButton.getScene().getWindow();
+                        stage.close();
                     }
                 });
 /*                saleComponent.setLayoutY(height * 200);
@@ -104,8 +111,20 @@ public class OrderDetailsController {
             } catch (IOException exception) {
                 throw new RuntimeException(exception);
             }
-            orderDetailsScroll.setContent(orderDetailsVbox);
         }
+        Label totalItemsPrice = new Label("Total Price of items: " + String.format("%.2f", order.totalItemsPrice));
+        Label deliveryPrice = new Label("Total Delivery price: " + String.format("%.2f", order.deliveryPrice));
+        Label totalPrice = new Label("Total Price of order: " + String.format("%.2f", order.totalPrice));
+
+        totalItemsPrice.setStyle(" -fx-text-Alignment: CENTER; -fx-font-size: 20 ;-fx-font-family:Tahoma;-fx-font-weight: bold ");
+        deliveryPrice.setStyle(" -fx-text-Alignment: CENTER; -fx-font-size: 20 ;-fx-font-family:Tahoma;-fx-font-weight: bold ");
+        totalPrice.setStyle(" -fx-text-Alignment: CENTER; -fx-font-size: 20 ;-fx-font-family:Tahoma;-fx-font-weight: bold ");
+
+
+        orderDetailsVbox.getChildren().add(totalItemsPrice);
+        orderDetailsVbox.getChildren().add(deliveryPrice);
+        orderDetailsVbox.getChildren().add(totalPrice);
+        orderDetailsScroll.setContent(orderDetailsVbox);
 
 
 /*

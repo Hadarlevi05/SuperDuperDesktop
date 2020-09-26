@@ -3,6 +3,7 @@ package Controllers;
 import Enums.OperatorTypeOfSale;
 import Models.Discount;
 import Models.Offer;
+import Models.Order;
 import Models.SuperDuperMarket;
 import UIUtils.SelectedItemInDiscount;
 import javafx.event.ActionEvent;
@@ -19,7 +20,9 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -42,7 +45,8 @@ public class SaleController {
     /*    public SaleController(){
             scrolPaneSale.setVvalue(1.0);
         }*/
-    private List<DiscountComponent> childs = new ArrayList<>();
+    public Map<Integer, List<DiscountComponent>> childs = new HashMap<>();
+
     private List<Offer> selectedOffers = new ArrayList<>();
 
     void showSales(SuperDuperMarket sdm, List<Discount> discounts) throws IOException {
@@ -55,6 +59,7 @@ public class SaleController {
         this.discounts = discounts;
         int height = 0;
         for (Discount discount : discounts) {
+            childs.put(discount.Id,new ArrayList<>());
 
             Label onSaleLabel = new Label(discount.Name);
             vboxSales.getChildren().add(onSaleLabel);
@@ -77,7 +82,7 @@ public class SaleController {
                     vboxSales.getChildren().add(fxmlLoader.load());
                     DiscountComponent saleComponent = fxmlLoader.getController();
 
-                    childs.add(saleComponent);
+                    childs.get(discount.Id).add(saleComponent);
                     vboxSales.getChildren().add(saleComponent);
 
                     saleComponent.SetDiscount(sdm, offer, discount);
@@ -88,7 +93,7 @@ public class SaleController {
                         if (selectedItemInDiscount.operatorTypeOfSale == OperatorTypeOfSale.ONE_OF) {
                             SetOneOf(selectedItemInDiscount);
                         } else if (selectedItemInDiscount.operatorTypeOfSale == OperatorTypeOfSale.ALL_OR_NOTHING) {
-                            SetAllOrNothing(selectedItemInDiscount.selected);
+                            SetAllOrNothing(selectedItemInDiscount, selectedItemInDiscount.selected);
                         }
                     });
                     height++;
@@ -117,37 +122,41 @@ public class SaleController {
 
             if (selectedItemInDiscount.operatorTypeOfSale == OperatorTypeOfSale.ONE_OF) {
                 Offer slectedOffer = dis.Offers.stream().filter(offer -> offer.ItemID == selectedItemInDiscount.itemID).collect(Collectors.toList()).get(0);
-                List<Offer> offers = new ArrayList<Offer>();
-                this.selectedOffers = offers;
+                this.selectedOffers.add(slectedOffer);
 
             } else if (selectedItemInDiscount.operatorTypeOfSale == OperatorTypeOfSale.ALL_OR_NOTHING) {
-                this.selectedOffers = dis.Offers;
+                this.selectedOffers.addAll(dis.Offers);
             }
         }
     }
 
-    public void SetAllOrNothing(boolean selected) {
+    public void SetAllOrNothing(SelectedItemInDiscount selectedItemInDiscount, boolean selected) {
         if (selected) {
-            for (DiscountComponent discountComponent : childs) {
-                discountComponent.setSelectionAsChecked();
+            for (DiscountComponent discountComponent : childs.get(selectedItemInDiscount.InstanceId)) {
+                if (discountComponent.item.serialNumber != selectedItemInDiscount.itemID &&
+                        discountComponent.discount.Id == selectedItemInDiscount.InstanceId) {
+                    discountComponent.setSelectionAsChecked();
+                }
             }
         } else {
-            for (DiscountComponent discountComponent : childs) {
-                discountComponent.setSelectionAsUnChecked();
+            for (DiscountComponent discountComponent : childs.get(selectedItemInDiscount.InstanceId)) {
+                if (discountComponent.discount.Id == selectedItemInDiscount.InstanceId) {
+                    discountComponent.setSelectionAsUnChecked();
+                }
             }
         }
     }
 
     public void SetOneOf(SelectedItemInDiscount selectedItemInDiscount) {
         if (selectedItemInDiscount.selected) {
-            for (DiscountComponent discountComponent : childs) {
+            for (DiscountComponent discountComponent : childs.get(selectedItemInDiscount.InstanceId)) {
                 if (discountComponent.item.serialNumber != selectedItemInDiscount.itemID &&
                         discountComponent.discount.Id == selectedItemInDiscount.InstanceId) {
                     discountComponent.setSelectionAsDisabed();
                 }
             }
         } else {
-            for (DiscountComponent discountComponent : childs) {
+            for (DiscountComponent discountComponent : childs.get(selectedItemInDiscount.InstanceId)) {
                 if (discountComponent.discount.Id == selectedItemInDiscount.InstanceId) {
                     discountComponent.setSelectionAsEnabled();
                 }
@@ -156,17 +165,17 @@ public class SaleController {
     }
 
     public void updateOrder(ActionEvent actionEvent) {
-        List<DiscountComponent> offers = childs.stream().filter(x -> x.cbxSelectDiscount.isSelected()).collect(Collectors.toList());
+/*        List<DiscountComponent> offers = childs.stream().filter(x -> x.cbxSelectDiscount.isSelected()).collect(Collectors.toList());
         for (DiscountComponent o : offers) {
             int q = (int) o.discount.Offers.stream().filter(x -> x.ItemID == o.item.serialNumber).findFirst().get().Quantity;
 
             Offer offerExists = selectedOffers.stream().filter(x -> x.ItemID == o.item.serialNumber).findFirst().orElse(null);
             if (offerExists == null) {
-                this.selectedOffers.add(new Offer(o.item.serialNumber, q, 0));
+                this.selectedOffers.add(new Offer(o.item.serialNumber, q, offerExists.ForAdditional));
             } else {
                 offerExists.Quantity += q;
             }
-        }
+        }*/
 
         refreshOrderCallback.accept(this.selectedOffers);
 

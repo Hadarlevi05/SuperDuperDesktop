@@ -1,0 +1,1 @@
+java -jar sdm-desktop-ui.jar
